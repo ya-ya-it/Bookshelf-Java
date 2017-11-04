@@ -18,22 +18,30 @@ public class Book {
 
     private static int nextBookId = 1;
     private int bookId;
-    private double price;
-    private String title, authorName;
+    protected double price;
+    protected String title, authorName;
 
     private enum Genre {
         COMEDY, DRAMA, HORROR, TRAGEDY, FICTION, BIOGRAPHY
     };
-    private Genre genre;
-    private LocalDate dateOfPublication;
-    private Image cover;
+    protected Genre genre;
+    protected LocalDate dateOfPublication;
+    protected Image cover;
 
+    /**
+     * Default constructor
+     * @param title
+     * @param authorName
+     * @param genre
+     * @param price
+     * @param dateOfPublication 
+     */
     public Book(String title, String authorName, Enum genre, double price, LocalDate dateOfPublication) {
         bookId = nextBookId;
         nextBookId++;
         setTitle(title);
         setAuthorName(authorName);
-        setGenre((Genre) genre);
+        this.genre = Genre.FICTION;
         setPrice(price);
         setDateOfPublication(dateOfPublication);
         try {
@@ -44,6 +52,15 @@ public class Book {
         }
     }
 
+    /**
+     * Default constructor with image cover
+     * @param title
+     * @param authorName
+     * @param genre
+     * @param price
+     * @param dateOfPublication
+     * @param cover 
+     */
     public Book(String title, String authorName, Enum genre, double price,
             LocalDate dateOfPublication, Image cover) {
         this(title, authorName, genre, price, dateOfPublication);
@@ -89,10 +106,6 @@ public class Book {
             throw new IllegalArgumentException("Author's name must start with an upper case"
                     + "letter, followed by letters or -");
         }
-    }
-
-    public void setGenre(Genre genre) {
-        this.genre = genre;
     }
 
     /**
@@ -143,7 +156,8 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book " + title + " by " + authorName + " in genre " + genre + " cost " + price + ", publication date is " + dateOfPublication;
+        return "Book " + title + " by " + authorName + " in genre " + genre + 
+                " cost " + price + ", publication date is " + dateOfPublication;
     }
 
     
