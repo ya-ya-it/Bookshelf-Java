@@ -1,4 +1,4 @@
-package fictionbookshelf;
+package fictionbookshelf.models;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
