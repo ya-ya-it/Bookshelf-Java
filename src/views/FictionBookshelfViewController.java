@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fictionbookshelf.views;
+package views;
 
-import fictionbookshelf.models.Book;
-import fictionbookshelf.models.FictionBook;
+import models.Book;
+import models.FictionBook;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.Month;

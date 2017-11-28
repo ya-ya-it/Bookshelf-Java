@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fictionbookshelf.views;
+package views;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,7 +19,7 @@ public class FictionBookShelf extends Application {
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("fictionbookshelf.views/FictionBookshelfView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("views/FictionBookshelfView.fxml"));
         Scene scene = new Scene(root);
         
         primaryStage.setTitle("Fiction bookshelf");

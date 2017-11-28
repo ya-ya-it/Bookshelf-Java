@@ -1,4 +1,4 @@
-package fictionbookshelf.models;
+package models;
 
 import java.time.LocalDate;
 import javafx.scene.image.Image;
