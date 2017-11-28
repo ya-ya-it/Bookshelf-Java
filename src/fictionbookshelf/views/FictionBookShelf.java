@@ -18,13 +18,13 @@ import javafx.stage.Stage;
 public class FictionBookShelf extends Application {
     
     @Override
-    public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-        
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("fictionbookshelf.views/FictionBookshelfView.fxml"));
         Scene scene = new Scene(root);
         
-        stage.setScene(scene);
-        stage.show();
+        primaryStage.setTitle("Fiction bookshelf");
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     /**

@@ -14,14 +14,14 @@ import javax.imageio.ImageIO;
  * 
  * This is the class with the book model
  */
-public class Book {
+public abstract class Book {
 
     private static int nextBookId = 1;
     private int bookId;
     protected double price;
     protected String title, authorName;
 
-    private enum Genre {
+    public enum Genre {
         COMEDY, DRAMA, HORROR, TRAGEDY, FICTION, BIOGRAPHY
     };
     protected Genre genre;
@@ -41,7 +41,6 @@ public class Book {
         nextBookId++;
         setTitle(title);
         setAuthorName(authorName);
-        this.genre = Genre.FICTION;
         setPrice(price);
         setDateOfPublication(dateOfPublication);
         try {
@@ -50,6 +49,7 @@ public class Book {
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
+        
     }
 
     /**
@@ -78,6 +78,10 @@ public class Book {
         } else {
             throw new IllegalArgumentException("Price should be greater then 0");
         }
+    }
+
+    public void setGenre(Genre genre) {
+        this.genre = genre;
     }
 
     /**
@@ -109,7 +113,7 @@ public class Book {
     }
 
     /**
-     * This method validate the date of publication. It should be not greater then now.
+     * This method validate the date of publication. It should be not greater then todays date.
      * @param dateOfPublication 
      */
     public void setDateOfPublication(LocalDate dateOfPublication) {
@@ -147,6 +151,7 @@ public class Book {
     public Image getCover() {
         return cover;
     }
+    
     
     /**
      * This method returns Book title by authorName in genre genre cost 

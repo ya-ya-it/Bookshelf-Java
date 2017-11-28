@@ -16,7 +16,7 @@ public class FictionBook extends Book{
         super(title, authorName, genre, price, dateOfPublication);
     }
     private String mainCharacter;
-    private enum FictionGenre {
+    public enum FictionGenre {
         MAGIC, APOCALIPSIS, HORROR, ADVENTURE, MYSTERY, MYTHOLOGY, PAST
     };
     private FictionGenre fictionGenre;
@@ -31,9 +31,9 @@ public class FictionBook extends Book{
      * @param price
      * @param dateOfPublication 
      */
-    public FictionBook(String title, String authorName, Enum genre, Enum fictionGenre,
+    public FictionBook(String title, String authorName, Enum fictionGenre,
             String mainCharacter, double price, LocalDate dateOfPublication) {
-        super(title, authorName, genre, price, dateOfPublication);
+        super(title, authorName,Book.Genre.FICTION, price, dateOfPublication);
         setMainCharacter(mainCharacter);
         setFictionGenre((FictionGenre) fictionGenre);
     }
@@ -49,9 +49,9 @@ public class FictionBook extends Book{
      * @param dateOfPublication
      * @param cover 
      */
-    public FictionBook(String title, String authorName, Enum genre, Enum fictionGenre,
+    public FictionBook(String title, String authorName, Enum fictionGenre,
             String mainCharacter, double price, LocalDate dateOfPublication, Image cover) {
-        super(title, authorName, genre, price, dateOfPublication, cover);
+        super(title, authorName, Book.Genre.FICTION, price, dateOfPublication, cover);      
         setMainCharacter(mainCharacter);
         setFictionGenre((FictionGenre) fictionGenre);
     }
