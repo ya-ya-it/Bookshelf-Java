@@ -17,14 +17,14 @@ import javax.imageio.ImageIO;
 public abstract class Book {
 
     private static int nextBookId = 1;
-    private int bookId;
+    private int bookId, amountInStock, amountSold;
     protected double price;
     protected String title, authorName;
 
     public enum Genre {
         COMEDY, DRAMA, HORROR, TRAGEDY, FICTION, BIOGRAPHY
     };
-    protected Genre genre;
+    protected static Genre genre;
     protected LocalDate dateOfPublication;
     protected Image cover;
 
@@ -35,20 +35,25 @@ public abstract class Book {
      * @param genre
      * @param price
      * @param dateOfPublication 
+     * @param amountInStock 
      */
-    public Book(String title, String authorName, Enum genre, double price, LocalDate dateOfPublication) {
+    public Book(String title, String authorName, Genre genre, double price, LocalDate dateOfPublication, int amountInStock, int amountSold) {
         bookId = nextBookId;
         nextBookId++;
         setTitle(title);
         setAuthorName(authorName);
         setPrice(price);
+        setGenre(genre);
         setDateOfPublication(dateOfPublication);
+        setAmountInStock(amountInStock);
+        setAmountSold(amountSold);
         try {
             BufferedImage bufferedImage = ImageIO.read(new File("./src/images/placeholder-cover.jpg"));
             cover = SwingFXUtils.toFXImage(bufferedImage, null);
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
+        this.amountSold = amountSold;
         
     }
 
@@ -59,11 +64,13 @@ public abstract class Book {
      * @param genre
      * @param price
      * @param dateOfPublication
+     * @param amountInStock
+     * @param amountSold
      * @param cover 
      */
-    public Book(String title, String authorName, Enum genre, double price,
-            LocalDate dateOfPublication, Image cover) {
-        this(title, authorName, genre, price, dateOfPublication);
+    public Book(String title, String authorName, Genre genre, double price,
+            LocalDate dateOfPublication, int amountInStock, int amountSold, Image cover) {
+        this(title, authorName, genre, price, dateOfPublication, amountInStock, amountSold);
         this.cover = cover;
     }
 
@@ -90,25 +97,49 @@ public abstract class Book {
      * @param title 
      */
     public void setTitle(String title) {
-        if (title.matches("[A-Z][a-zA-Z\\-]*?")) {
+        if (title.matches("[A-Z].*")) {
             this.title = title;
         } else {
-            throw new IllegalArgumentException("Title must start with an upper case"
-                    + "letter, followed by letters or -");
+            throw new IllegalArgumentException("Title must start with an upper case");
+        }
+    }
+    
+    /**
+     * This method validate the amount in stock parameter. 
+     * The number should be greater then zero.
+     * @param amountInStock 
+     */
+    public void setAmountInStock(int amountInStock) {
+        if (amountInStock > 0) {
+            this.amountInStock = amountInStock;
+        } else {
+            throw new IllegalArgumentException("Stock amount should be greater then 0");
         }
     }
 
+    /**
+     * This method validate the stock amount parameter. 
+     * The number should be greater then zero.
+     * @param amountSold 
+     */
+    public void setAmountSold(int amountSold) {
+        if (amountSold > 0) {
+            this.amountSold = amountSold;
+        } else {
+            throw new IllegalArgumentException("Sold amount should be greater then 0");
+        }
+    }
+        
     /**
      * This method validate the authors name parameter. The first letter should be 
      * capital or the Illegal argument exception is thrown.
      * @param authorName 
      */
     public void setAuthorName(String authorName) {
-        if (authorName.matches("[A-Z][a-zA-Z\\-]*?")) {
+        if (authorName.matches("[A-Z].*")) {
             this.authorName = authorName;
         } else {
-            throw new IllegalArgumentException("Author's name must start with an upper case"
-                    + "letter, followed by letters or -");
+            throw new IllegalArgumentException("Author's name must start with an upper case");
         }
     }
 
@@ -151,7 +182,14 @@ public abstract class Book {
     public Image getCover() {
         return cover;
     }
-    
+
+    public int getAmountInStock() {
+        return amountInStock;
+    }
+
+    public int getAmountSold() {
+        return amountSold;
+    }
     
     /**
      * This method returns Book title by authorName in genre genre cost 

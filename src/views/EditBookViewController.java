@@ -14,7 +14,7 @@ import javafx.fxml.Initializable;
  *
  * @author dasha
  */
-public class EditBookController implements Initializable {
+public class EditBookViewController implements Initializable {
 
     /**
      * Initializes the controller class.

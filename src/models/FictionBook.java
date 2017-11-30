@@ -11,13 +11,14 @@ import javafx.scene.image.Image;
  */
 public class FictionBook extends Book{
     
-    public FictionBook(String title, String authorName, Enum genre, double price, 
-            LocalDate dateOfPublication) {
-        super(title, authorName, genre, price, dateOfPublication);
+    public FictionBook(String title, String authorName, Genre genre, double price,
+            LocalDate dateOfPublication, int amountInStock, int amountSold) {
+        super(title, authorName, genre, price, dateOfPublication, amountInStock, amountSold);
+        super.genre = Book.Genre.FICTION;
     }
     private String mainCharacter;
     public enum FictionGenre {
-        MAGIC, APOCALIPSIS, HORROR, ADVENTURE, MYSTERY, MYTHOLOGY, PAST
+        MAGIC, APOCALYPSYS, HORROR, ADVENTURE, MYSTERY, MYTHOLOGY, PAST
     };
     private FictionGenre fictionGenre;
 
@@ -25,15 +26,17 @@ public class FictionBook extends Book{
      * Default constructor
      * @param title
      * @param authorName
-     * @param genre
      * @param fictionGenre
      * @param mainCharacter
      * @param price
+     * @param amountInStock
      * @param dateOfPublication 
+     * @param amountSold 
      */
-    public FictionBook(String title, String authorName, Enum fictionGenre,
-            String mainCharacter, double price, LocalDate dateOfPublication) {
-        super(title, authorName,Book.Genre.FICTION, price, dateOfPublication);
+    public FictionBook(String title, String authorName, FictionGenre fictionGenre,
+            String mainCharacter, double price, LocalDate dateOfPublication, int amountInStock, int amountSold) {
+        super(title, authorName, genre, price, dateOfPublication, amountInStock, amountSold);
+        super.genre = Book.Genre.FICTION;
         setMainCharacter(mainCharacter);
         setFictionGenre((FictionGenre) fictionGenre);
     }
@@ -42,16 +45,18 @@ public class FictionBook extends Book{
      * Default constructor with image cover
      * @param title
      * @param authorName
-     * @param genre
      * @param fictionGenre
      * @param mainCharacter
      * @param price
+     * @param amountInStock
      * @param dateOfPublication
+     * @param amountSold
      * @param cover 
      */
-    public FictionBook(String title, String authorName, Enum fictionGenre,
-            String mainCharacter, double price, LocalDate dateOfPublication, Image cover) {
-        super(title, authorName, Book.Genre.FICTION, price, dateOfPublication, cover);      
+    public FictionBook(String title, String authorName, FictionGenre fictionGenre,
+            String mainCharacter, double price, LocalDate dateOfPublication, int amountInStock, int amountSold, Image cover) {
+        super(title, authorName, genre, price, dateOfPublication, amountInStock, amountSold);      
+        super.genre = Book.Genre.FICTION;
         setMainCharacter(mainCharacter);
         setFictionGenre((FictionGenre) fictionGenre);
     }
@@ -59,14 +64,13 @@ public class FictionBook extends Book{
     /**
      * This method validate the main character's name parameter. The first letter should be 
      * capital or the Illegal argument exception is thrown.
-     * @param authorName 
+     * @param mainCharacter
      */
     public void setMainCharacter(String mainCharacter) {
-        if (mainCharacter.matches("[A-Z][a-zA-Z\\-]*?")) {
+        if (mainCharacter.matches("[A-Z].*")) {
             this.mainCharacter = mainCharacter;
         } else {
-            throw new IllegalArgumentException("Name of the main character must"
-                    + "start with an upper case letter, followed by letters or -");
+            throw new IllegalArgumentException("Name of the main character must");
         }
     }
 
