@@ -12,16 +12,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="440.0" prefWidth="730.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.FictionBookshelfViewController">
+<AnchorPane id="AnchorPane" prefHeight="553.0" prefWidth="730.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.FictionBookshelfViewController">
    <children>
-      <VBox alignment="TOP_CENTER" layoutX="156.0" layoutY="23.0" prefHeight="400.0" prefWidth="600.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="TOP_CENTER" layoutX="156.0" layoutY="23.0" prefHeight="553.0" prefWidth="600.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" text="Bookshelf" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
             </Label>
-            <TableView fx:id="bookShelf" prefHeight="200.0" prefWidth="200.0">
+            <TableView fx:id="bookShelf" prefHeight="316.0" prefWidth="730.0">
               <columns>
                 <TableColumn fx:id="titleColumn" prefWidth="165.0" text="Title" />
                 <TableColumn fx:id="authorColumn" minWidth="3.0" prefWidth="127.0" text="Author" />
@@ -50,9 +50,10 @@
                   <Label fx:id="bookInStocLabel" text="Label" GridPane.columnIndex="3" />
                   <Label text="Num of books sold" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <Label fx:id="bookSoldLabel" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                  <Button mnemonicParsing="false" onAction="#addNewBookButtonPushed" prefHeight="27.0" prefWidth="113.0" text="Add new Book" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Button mnemonicParsing="false" onAction="#addNewBookButtonPushed" prefHeight="27.0" prefWidth="113.0" text="Add new Book" GridPane.rowIndex="2" />
                   <Button mnemonicParsing="false" onAction="#sellBookButtonPushed" prefHeight="27.0" prefWidth="113.0" text="Sell Book" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                  <Button mnemonicParsing="false" onAction="#editBookButtonPushed" prefHeight="27.0" prefWidth="113.0" text="Edit book info" GridPane.rowIndex="2" />
+                  <Label text="Total inventory price" GridPane.rowIndex="1" />
+                  <Label fx:id="totalInventoryPriceLavel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
          </children>

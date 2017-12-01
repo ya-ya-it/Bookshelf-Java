@@ -4,12 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/Users/dasha/NetBeansProjects/FictionBookShelf/src/views/AddNewBookViewController.java</file>
-            <file>file:/Users/dasha/NetBeansProjects/FictionBookShelf/src/views/FictionBookShelf.java</file>
-            <file>file:/Users/dasha/NetBeansProjects/FictionBookShelf/src/models/FictionBook.java</file>
             <file>file:/Users/dasha/NetBeansProjects/FictionBookShelf/src/views/FictionBookshelfViewController.java</file>
-            <file>file:/Users/dasha/NetBeansProjects/FictionBookShelf/src/views/EditBookViewController.java</file>
             <file>file:/Users/dasha/NetBeansProjects/FictionBookShelf/src/models/Book.java</file>
-            <file>file:/Users/dasha/NetBeansProjects/FictionBookShelf/src/views/SceneChanger.java</file>
         </group>
     </open-files>
 </project-private>

@@ -154,7 +154,7 @@ public abstract class Book {
             throw new IllegalArgumentException("The book can't be from the future");
         }
     }
-
+   
     public int getBookId() {
         return bookId;
     }

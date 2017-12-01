@@ -39,7 +39,12 @@ public class FictionBookshelfViewController implements Initializable {
     @FXML private Label totalSaleLabel;
     @FXML private Label bookInStocLabel;
     @FXML private Label bookSoldLabel;
+    @FXML private Label totalInventoryPriceLavel;
     
+    double totalSales = 0;
+    int booksSold = 0;
+    int booksInStock = 0;
+    double totalInventoryPrice = 0;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -51,9 +56,19 @@ public class FictionBookshelfViewController implements Initializable {
         publicationDateColumn.setCellValueFactory(new PropertyValueFactory<FictionBook, LocalDate>("dateOfPublication"));
         amountInStockColumn.setCellValueFactory(new PropertyValueFactory<FictionBook, Integer>("amountInStock"));
         bookShelf.setItems(getBooks());
+       
+        ObservableList<FictionBook> books = bookShelf.getItems();
+        for(FictionBook book : books){
+            booksSold += book.getAmountSold();
+            totalInventoryPrice += book.getPrice() * book.getAmountInStock();
+            booksInStock += book.getAmountInStock();
+            totalSales += book.getPrice() * book.getAmountSold();
+        }
         
-        //totalSaleLabel.setText(getTotalSale());
-        //bookInStocLabel.setText(getBookInStock());
+        totalInventoryPriceLavel.setText(Double.toString(totalInventoryPrice));
+        bookSoldLabel.setText(Integer.toString(booksSold));
+        bookInStocLabel.setText(Integer.toString(booksInStock));
+        totalSaleLabel.setText(Double.toString(totalSales));
         
    }    
 
@@ -62,7 +77,7 @@ public class FictionBookshelfViewController implements Initializable {
         
         //add employees to the list
         books.add(new FictionBook("Harry Potter and the Philosopher's Stone", "J.K. Rowling", FictionBook.FictionGenre.ADVENTURE, "Harry Potter", 10.00, LocalDate.of(1997, Month.JUNE, 26), 10, 1));
-        
+        books.add(new FictionBook("Java", "JavaJava", FictionBook.FictionGenre.HORROR, "Compiler", 8.00, LocalDate.of(2017, Month.NOVEMBER, 29), 2, 3));
         //return the list
         return books;
     }
@@ -72,20 +87,26 @@ public class FictionBookshelfViewController implements Initializable {
         SceneChanger sc = new SceneChanger();
         sc.changeScenes(event, "AddNewBookView.fxml", "Add new book");
     }
-    public void editBookButtonPushed(ActionEvent event) throws IOException
-    {
-        SceneChanger sc = new SceneChanger();
-        sc.changeScenes(event, "EditBookView.fxml", "Edit book");
-    }
+    
     public void sellBookButtonPushed(ActionEvent event) {
+       ObservableList<FictionBook> books = bookShelf.getItems();
+       FictionBook currentBook = bookShelf.getSelectionModel().getSelectedItem();
+       if (currentBook.getAmountInStock() != 1) {
+           currentBook.setAmountInStock(currentBook.getAmountInStock()-1);
+       } else {
+            books.remove(currentBook);
+       }
+      
+       booksSold++;
+       booksInStock--;
+       totalInventoryPrice = totalInventoryPrice - currentBook.getPrice();
+       totalSales = totalSales + currentBook.getPrice();
        
-        
-        getBooks().remove(bookShelf.getSelectionModel().getSelectedItem());
+       
+       totalInventoryPriceLavel.setText(Double.toString(totalInventoryPrice));
+       bookSoldLabel.setText(Integer.toString(booksSold));
+       bookInStocLabel.setText(Integer.toString(booksInStock));
+       totalSaleLabel.setText(Double.toString(totalSales));
+       bookShelf.refresh();
     }
-
-//    private String getTotalSale() {
-//    }
-//
-//    private String getBookInStock() {
-//    }
 }

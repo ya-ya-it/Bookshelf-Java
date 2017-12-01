@@ -35,6 +35,7 @@ public class SceneChanger {
     
     public void changeScene(ActionEvent event, String viewName, String title, 
             Book book, ControllerInterface controllerInterface) throws IOException {
+        
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(viewName));
         Parent parent = loader.load();
