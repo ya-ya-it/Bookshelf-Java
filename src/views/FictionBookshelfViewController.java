@@ -15,11 +15,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -40,6 +45,8 @@ public class FictionBookshelfViewController implements Initializable {
     @FXML private Label bookInStocLabel;
     @FXML private Label bookSoldLabel;
     @FXML private Label totalInventoryPriceLavel;
+    
+    ObservableList<FictionBook> books;
     
     double totalSales = 0;
     int booksSold = 0;
@@ -73,7 +80,7 @@ public class FictionBookshelfViewController implements Initializable {
    }    
 
     private ObservableList<FictionBook> getBooks() {
-         ObservableList<FictionBook> books = FXCollections.observableArrayList();
+        books = FXCollections.observableArrayList();
         
         //add employees to the list
         books.add(new FictionBook("Harry Potter and the Philosopher's Stone", "J.K. Rowling", FictionBook.FictionGenre.ADVENTURE, "Harry Potter", 10.00, LocalDate.of(1997, Month.JUNE, 26), 10, 1));
@@ -82,14 +89,35 @@ public class FictionBookshelfViewController implements Initializable {
         return books;
     }
     
+    public void loadBooks(ObservableList<FictionBook> newList)
+    {
+        this.bookShelf.setItems(newList);
+        bookShelf.refresh();
+    }
+    
     public void addNewBookButtonPushed(ActionEvent event) throws IOException
     {
-        SceneChanger sc = new SceneChanger();
-        sc.changeScenes(event, "AddNewBookView.fxml", "Add new book");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("AddNewBookView.fxml"));
+        Parent parent = loader.load();
+        Scene newBookScene = new Scene(parent);
+        
+        //access the controller of the newEmployeeScene and send over
+        //the current list of employees
+        AddNewBookViewController controller = loader.getController();
+        controller.initialData(bookShelf.getItems());
+        
+        //Get the current "stage" (aka window) 
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        
+        //change the scene to the new scene
+        stage.setTitle("Add new book");
+        stage.setScene(newBookScene);
+        stage.show();
     }
     
     public void sellBookButtonPushed(ActionEvent event) {
-       ObservableList<FictionBook> books = bookShelf.getItems();
+       books = bookShelf.getItems();
        FictionBook currentBook = bookShelf.getSelectionModel().getSelectedItem();
        if (currentBook.getAmountInStock() != 1) {
            currentBook.setAmountInStock(currentBook.getAmountInStock()-1);

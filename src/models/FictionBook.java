@@ -67,10 +67,12 @@ public class FictionBook extends Book{
      * @param mainCharacter
      */
     public void setMainCharacter(String mainCharacter) {
-        if (mainCharacter.matches("[A-Z].*")) {
-            this.mainCharacter = mainCharacter;
+        if(mainCharacter.isEmpty()) {
+            throw new IllegalArgumentException("Please, enter the main character name");
+        } else if (!mainCharacter.matches("[A-Z].*")) {
+            throw new IllegalArgumentException("Name of the main character must start with an upper case");
         } else {
-            throw new IllegalArgumentException("Name of the main character must");
+            this.mainCharacter = mainCharacter;
         }
     }
 

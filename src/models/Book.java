@@ -76,14 +76,17 @@ public abstract class Book {
 
     /**
      * This method validate the price. If the price is less then 0, 
-     * Illegal argument exception is thrown.
+     * Illegal argument exception is thrown. If the price field
+     * is empty the Illegal argument exception is thrown.
      * @param price 
      */
     public void setPrice(double price) {
-        if (price > 0) {
-            this.price = price;
-        } else {
+        if(title.isEmpty()) {
+            throw new IllegalArgumentException("Please, enter the price");
+        } else if (price <= 0) {
             throw new IllegalArgumentException("Price should be greater then 0");
+        } else {
+            this.price = price;
         }
     }
 
@@ -93,14 +96,17 @@ public abstract class Book {
 
     /**
      * This method validate the title parameter. The first letter should be 
-     * capital or the Illegal argument exception is thrown.
+     * capital or the Illegal argument exception is thrown. If the title field
+     * is empty the Illegal argument exception is thrown.
      * @param title 
      */
     public void setTitle(String title) {
-        if (title.matches("[A-Z].*")) {
-            this.title = title;
-        } else {
+        if(title.isEmpty()) {
+            throw new IllegalArgumentException("Please, enter the title");
+        } else if (!title.matches("[A-Z].*")) {
             throw new IllegalArgumentException("Title must start with an upper case");
+        } else {
+            this.title = title;
         }
     }
     
@@ -110,23 +116,23 @@ public abstract class Book {
      * @param amountInStock 
      */
     public void setAmountInStock(int amountInStock) {
-        if (amountInStock > 0) {
-            this.amountInStock = amountInStock;
-        } else {
+        if (amountInStock <= 0) {
             throw new IllegalArgumentException("Stock amount should be greater then 0");
+        } else {
+            this.amountInStock = amountInStock;
         }
     }
 
     /**
-     * This method validate the stock amount parameter. 
-     * The number should be greater then zero.
+     * This method validate the amount sold parameter. 
+     * The number should be greater or equal to zero.
      * @param amountSold 
      */
     public void setAmountSold(int amountSold) {
-        if (amountSold > 0) {
-            this.amountSold = amountSold;
+        if (amountSold < 0) {
+            throw new IllegalArgumentException("Please, enter the amount sold");
         } else {
-            throw new IllegalArgumentException("Sold amount should be greater then 0");
+            this.amountSold = amountSold;
         }
     }
         
@@ -136,15 +142,18 @@ public abstract class Book {
      * @param authorName 
      */
     public void setAuthorName(String authorName) {
-        if (authorName.matches("[A-Z].*")) {
-            this.authorName = authorName;
-        } else {
+        if(authorName.isEmpty()) {
+            throw new IllegalArgumentException("Please, enter the author name");
+        } else if (!authorName.matches("[A-Z].*")) {
             throw new IllegalArgumentException("Author's name must start with an upper case");
-        }
+
+        } else {
+            this.authorName = authorName;        }
     }
 
     /**
-     * This method validate the date of publication. It should be not greater then todays date.
+     * This method validate the date of publication. It should be not greater 
+     * then todays date.
      * @param dateOfPublication 
      */
     public void setDateOfPublication(LocalDate dateOfPublication) {
