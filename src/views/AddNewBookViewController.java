@@ -8,6 +8,7 @@ package views;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
@@ -87,7 +88,7 @@ public class AddNewBookViewController implements Initializable {
             FictionBook.FictionGenre genre;
             LocalDate dateOfPublication;
             String mainCharacters = mainCharacterField.getText();
-            double price = Double.parseDouble(priceField.getText());
+            BigDecimal price = new BigDecimal(priceField.getText());
             int amountInStock;
             int amountSold;
             Image bookCover = bookImage.getImage();

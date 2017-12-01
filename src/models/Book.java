@@ -3,6 +3,7 @@ package models;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
@@ -18,7 +19,7 @@ public abstract class Book {
 
     private static int nextBookId = 1;
     private int bookId, amountInStock, amountSold;
-    protected double price;
+    protected BigDecimal price;
     protected String title, authorName;
 
     public enum Genre {
@@ -37,7 +38,7 @@ public abstract class Book {
      * @param dateOfPublication 
      * @param amountInStock 
      */
-    public Book(String title, String authorName, Genre genre, double price, LocalDate dateOfPublication, int amountInStock, int amountSold) {
+    public Book(String title, String authorName, Genre genre, BigDecimal price, LocalDate dateOfPublication, int amountInStock, int amountSold) {
         bookId = nextBookId;
         nextBookId++;
         setTitle(title);
@@ -68,7 +69,7 @@ public abstract class Book {
      * @param amountSold
      * @param cover 
      */
-    public Book(String title, String authorName, Genre genre, double price,
+    public Book(String title, String authorName, Genre genre, BigDecimal price,
             LocalDate dateOfPublication, int amountInStock, int amountSold, Image cover) {
         this(title, authorName, genre, price, dateOfPublication, amountInStock, amountSold);
         this.cover = cover;
@@ -76,14 +77,11 @@ public abstract class Book {
 
     /**
      * This method validate the price. If the price is less then 0, 
-     * Illegal argument exception is thrown. If the price field
-     * is empty the Illegal argument exception is thrown.
+     * Illegal argument exception is thrown.
      * @param price 
      */
-    public void setPrice(double price) {
-        if(title.isEmpty()) {
-            throw new IllegalArgumentException("Please, enter the price");
-        } else if (price <= 0) {
+    public void setPrice(BigDecimal price) {
+        if (price.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Price should be greater then 0");
         } else {
             this.price = price;
@@ -168,7 +166,7 @@ public abstract class Book {
         return bookId;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 

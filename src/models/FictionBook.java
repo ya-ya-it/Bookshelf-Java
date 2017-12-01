@@ -1,5 +1,6 @@
 package models;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import javafx.scene.image.Image;
 
@@ -11,7 +12,7 @@ import javafx.scene.image.Image;
  */
 public class FictionBook extends Book{
     
-    public FictionBook(String title, String authorName, Genre genre, double price,
+    public FictionBook(String title, String authorName, Genre genre, BigDecimal price,
             LocalDate dateOfPublication, int amountInStock, int amountSold) {
         super(title, authorName, genre, price, dateOfPublication, amountInStock, amountSold);
         super.genre = Book.Genre.FICTION;
@@ -34,7 +35,7 @@ public class FictionBook extends Book{
      * @param amountSold 
      */
     public FictionBook(String title, String authorName, FictionGenre fictionGenre,
-            String mainCharacter, double price, LocalDate dateOfPublication, int amountInStock, int amountSold) {
+            String mainCharacter, BigDecimal price, LocalDate dateOfPublication, int amountInStock, int amountSold) {
         super(title, authorName, genre, price, dateOfPublication, amountInStock, amountSold);
         super.genre = Book.Genre.FICTION;
         setMainCharacter(mainCharacter);
@@ -54,7 +55,7 @@ public class FictionBook extends Book{
      * @param cover 
      */
     public FictionBook(String title, String authorName, FictionGenre fictionGenre,
-            String mainCharacter, double price, LocalDate dateOfPublication, int amountInStock, int amountSold, Image cover) {
+            String mainCharacter, BigDecimal price, LocalDate dateOfPublication, int amountInStock, int amountSold, Image cover) {
         super(title, authorName, genre, price, dateOfPublication, amountInStock, amountSold);      
         super.genre = Book.Genre.FICTION;
         setMainCharacter(mainCharacter);
