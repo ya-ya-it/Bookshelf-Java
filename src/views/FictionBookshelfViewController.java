@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package views;
 
 import java.io.IOException;
@@ -29,7 +24,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class
+ * FXML Controller class for FictionBookShelf view
  *
  * @author Dasha
  */
@@ -58,6 +53,7 @@ public class FictionBookshelfViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
+        // set up columns in the table
         titleColumn.setCellValueFactory(new PropertyValueFactory<FictionBook, String>("title"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<FictionBook, String>("authorName"));
         genreColumn.setCellValueFactory(new PropertyValueFactory<FictionBook, FictionBook.FictionGenre>("fictionGenre"));
@@ -66,6 +62,7 @@ public class FictionBookshelfViewController implements Initializable {
         amountInStockColumn.setCellValueFactory(new PropertyValueFactory<FictionBook, Integer>("amountInStock"));
         bookShelf.setItems(getBooks());
        
+        // set up labels with business information
         ObservableList<FictionBook> books = bookShelf.getItems();
         for(FictionBook book : books){
             booksSold += book.getAmountSold();
@@ -81,6 +78,11 @@ public class FictionBookshelfViewController implements Initializable {
         
    }    
 
+    /** 
+     * This method receives data from the AddNewBook window and save it to the 
+     * ObservableList
+     * @return 
+     */
     private ObservableList<FictionBook> getBooks() {
         books = FXCollections.observableArrayList();
         
@@ -91,12 +93,34 @@ public class FictionBookshelfViewController implements Initializable {
         return books;
     }
     
+    /**
+     * This method load new books to the TableView and update labels with 
+     * business information
+     * @param newList 
+     */
     public void loadBooks(ObservableList<FictionBook> newList)
     {
         this.bookShelf.setItems(newList);
-        bookShelf.refresh();
+        
+        ObservableList<FictionBook> books = bookShelf.getItems();
+        for(FictionBook book : books){
+            booksSold += book.getAmountSold();
+            totalInventoryPrice = totalInventoryPrice.add((book.getPrice().multiply(new BigDecimal(book.getAmountInStock()))));
+            booksInStock += book.getAmountInStock();
+            totalSales = totalSales.add(book.getPrice().multiply(new BigDecimal(book.getAmountSold())));
+        }
+        
+       totalInventoryPriceLavel.setText(currencyFormat(totalInventoryPrice));
+       bookSoldLabel.setText(Integer.toString(booksSold));
+       bookInStocLabel.setText(Integer.toString(booksInStock));
+       totalSaleLabel.setText(currencyFormat(totalSales));
     }
     
+    /**
+     * This method call new window when the Add button is pushed.
+     * @param event
+     * @throws IOException 
+     */
     public void addNewBookButtonPushed(ActionEvent event) throws IOException
     {
         FXMLLoader loader = new FXMLLoader();
@@ -118,6 +142,11 @@ public class FictionBookshelfViewController implements Initializable {
         stage.show();
     }
     
+    /**
+     * This method removes data from the table when the Sell button is pushed and
+     * update labels with business information
+     * @param event 
+     */
     public void sellBookButtonPushed(ActionEvent event) {
        books = bookShelf.getItems();
        FictionBook currentBook = bookShelf.getSelectionModel().getSelectedItem();

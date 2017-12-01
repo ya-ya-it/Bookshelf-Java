@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package views;
 
 import javafx.application.Application;
@@ -22,7 +17,7 @@ public class FictionBookShelf extends Application {
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("views/FictionBookshelfView.fxml"));
         Scene scene = new Scene(root);
         
-        primaryStage.setTitle("Fiction bookshelf");
+        primaryStage.setTitle("Bookshelf");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

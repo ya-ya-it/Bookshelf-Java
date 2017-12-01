@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package views;
 
 import java.awt.image.BufferedImage;
@@ -33,7 +28,7 @@ import javax.imageio.ImageIO;
 import models.FictionBook;
 
 /**
- * FXML Controller class
+ * FXML Controller class for AddNewBook view
  *
  * @author Dasha
  */
@@ -58,6 +53,7 @@ public class AddNewBookViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         errorMsg.setVisible(false);
         
+        //set up image
         try
         {
             BufferedImage bufferedImage = ImageIO.read(new File("./src/images/placeholder-cover.png"));
@@ -69,17 +65,28 @@ public class AddNewBookViewController implements Initializable {
             System.err.println(e.getMessage());
         }
         
+        //set up combobox
         fictionGenreComboBox.getItems().addAll(FictionBook.FictionGenre.values());
-        fictionGenreComboBox.setVisibleRowCount(3);
+        fictionGenreComboBox.setVisibleRowCount(5);
         fictionGenreComboBox.setEditable(false);
         fictionGenreComboBox.setPromptText("Choose Genre");
         
     }
     
+    /**
+     * Method to receive data from the Main table
+     * @param listOfBooks 
+     */
     public void initialData(ObservableList<FictionBook> listOfBooks) {
         books = listOfBooks;
     }
     
+    /**
+     * This method checks fields and throws errors if data are incorrect. If
+     * data are correct, it saves to the ObservableList and sends to the Main Table.
+     * @param event
+     * @throws IOException 
+     */
     public void saveBookButtonPushed(ActionEvent event) throws IOException {
         try
         {
@@ -105,13 +112,13 @@ public class AddNewBookViewController implements Initializable {
                 dateOfPublication = dateOfPublicationDatePicker.getValue();
             }
             
-            if(!amountInStockField.getText().matches("[0-9]")) {
+            if(!amountInStockField.getText().matches("\\d+(\\.\\d+)?")) {
                 throw new IllegalArgumentException("Please enter the book amount in stock");
             } else {
                 amountInStock = Integer.parseInt(amountInStockField.getText());
             }
             
-            if(!amountSoldField.getText().matches("[0-9]")) {
+            if(!amountSoldField.getText().matches("\\d+(\\.\\d+)?")) {
                 throw new IllegalArgumentException("Please enter the correct amount of sold books");
             } else {
                 amountSold = Integer.parseInt(amountSoldField.getText());
@@ -131,6 +138,12 @@ public class AddNewBookViewController implements Initializable {
         }
     }
     
+    /**
+     * This method changes scene to the Main FictionBookshelf
+     * @param event
+     * @param fxmlFileName
+     * @throws IOException 
+     */
     public void changeScene(ActionEvent event, String fxmlFileName) throws IOException
     {
         //load a new scene
@@ -153,27 +166,34 @@ public class AddNewBookViewController implements Initializable {
         stage.show();
     }
     
+    /**
+     * This method returns scene to the Main one without saving data
+     * @param event
+     * @throws IOException 
+     */
     public void backButtonPushed(ActionEvent event) throws IOException {
         changeScene(event, "FictionBookshelfView.fxml");
     }
     
+    /**
+     * This method create a new window with a filechooser to choose the cover
+     * of the new book.
+     * @param event 
+     */
     public void chooseImageButtonPushed(ActionEvent event) {
-                //get the stage to open a new window
+        
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         
         fileChooser = new FileChooser();
         fileChooser.setTitle("Open Image");
         
-        //filter for only .jpg and .png files
         FileChooser.ExtensionFilter jpgFilter 
                 = new FileChooser.ExtensionFilter("Image File (*.jpg)", "*.jpg");
         FileChooser.ExtensionFilter pngFilter 
                 = new FileChooser.ExtensionFilter("Image File (*.png)", "*.png");
         
         fileChooser.getExtensionFilters().addAll(jpgFilter, pngFilter);
-        
-        
-        //Set to the user's picture directory or C drive if not available
+       
         String userDirectoryString = System.getProperty("user.home");
         File userDirectory = new File(userDirectoryString);
         
@@ -182,10 +202,8 @@ public class AddNewBookViewController implements Initializable {
         
         fileChooser.setInitialDirectory(userDirectory);
         
-        //open the file dialog window
         imageFile = fileChooser.showOpenDialog(stage);
         
-        //ensure the user selected a file
         if (imageFile.isFile())
         {
             try
