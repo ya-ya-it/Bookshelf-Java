@@ -49,7 +49,7 @@ public abstract class Book {
         setAmountInStock(amountInStock);
         setAmountSold(amountSold);
         try {
-            BufferedImage bufferedImage = ImageIO.read(new File("./src/images/placeholder-cover.jpg"));
+            BufferedImage bufferedImage = ImageIO.read(new File("./src/images/placeholder-cover.png"));
             cover = SwingFXUtils.toFXImage(bufferedImage, null);
         } catch (IOException e) {
             System.err.println(e.getMessage());

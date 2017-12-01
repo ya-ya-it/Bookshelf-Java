@@ -95,12 +95,18 @@ public class AddNewBookViewController implements Initializable {
             FictionBook.FictionGenre genre;
             LocalDate dateOfPublication;
             String mainCharacters = mainCharacterField.getText();
-            BigDecimal price = new BigDecimal(priceField.getText());
+            BigDecimal price;
+            if (!priceField.getText().isEmpty()) {
+                price = new BigDecimal(priceField.getText());
+            } else {
+                price = new BigDecimal("0");
+            }
             int amountInStock;
             int amountSold;
             Image bookCover = bookImage.getImage();
             
             if (fictionGenreComboBox.getSelectionModel().isEmpty()) {
+                System.out.print("Genre");
                 throw new IllegalArgumentException("Please choose genre");
             } else {
                 genre = (FictionBook.FictionGenre)fictionGenreComboBox.getSelectionModel().getSelectedItem();
