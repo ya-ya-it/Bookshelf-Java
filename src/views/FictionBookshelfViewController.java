@@ -123,23 +123,10 @@ public class FictionBookshelfViewController implements Initializable {
      */
     public void addNewBookButtonPushed(ActionEvent event) throws IOException
     {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("AddNewBookView.fxml"));
-        Parent parent = loader.load();
-        Scene newBookScene = new Scene(parent);
         
-        //access the controller of the newEmployeeScene and send over
-        //the current list of employees
-        AddNewBookViewController controller = loader.getController();
-        controller.initialData(bookShelf.getItems());
+        SceneChanger sc = new SceneChanger();
+        sc.changeScenes(event, "AddNewBookView.fxml", "Add new book");
         
-        //Get the current "stage" (aka window) 
-        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        
-        //change the scene to the new scene
-        stage.setTitle("Add new book");
-        stage.setScene(newBookScene);
-        stage.show();
     }
     
     /**

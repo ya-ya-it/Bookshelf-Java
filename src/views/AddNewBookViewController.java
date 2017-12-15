@@ -135,7 +135,9 @@ public class AddNewBookViewController implements Initializable {
                                         amountSold,bookCover);
             books.add(newBook);
             
-            changeScene(event, "FictionBookshelfView.fxml");
+            
+            SceneChanger sc = new SceneChanger();
+            sc.changeScenes(event, "FictionBookshelfView.fxml", "Bookshelf");
         }
         catch (IllegalArgumentException e)
         {
@@ -145,40 +147,13 @@ public class AddNewBookViewController implements Initializable {
     }
     
     /**
-     * This method changes scene to the Main FictionBookshelf
-     * @param event
-     * @param fxmlFileName
-     * @throws IOException 
-     */
-    public void changeScene(ActionEvent event, String fxmlFileName) throws IOException
-    {
-        //load a new scene
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(fxmlFileName));
-        Parent parent = loader.load();
-        Scene newScene = new Scene(parent);
-        
-        //access the controller of the new Scene and send over
-        //the current list of employees
-        FictionBookshelfViewController controller = loader.getController();
-        controller.loadBooks(books);
-        
-        //Get the current "stage" (aka window) 
-        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        
-        //change the scene to the new scene
-        stage.setTitle("Bookshelf");
-        stage.setScene(newScene);
-        stage.show();
-    }
-    
-    /**
      * This method returns scene to the Main one without saving data
      * @param event
      * @throws IOException 
      */
     public void backButtonPushed(ActionEvent event) throws IOException {
-        changeScene(event, "FictionBookshelfView.fxml");
+        SceneChanger sc = new SceneChanger();
+        sc.changeScenes(event, "FictionBookshelfView.fxml", "Bookshelf");
     }
     
     /**

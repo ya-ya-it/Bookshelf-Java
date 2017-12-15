@@ -1,13 +1,14 @@
 package models;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.security.SecureRandom;
 import java.time.LocalDate;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.Image;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -27,7 +28,7 @@ public abstract class Book {
     };
     protected static Genre genre;
     protected LocalDate dateOfPublication;
-    protected Image cover;
+    protected File cover;
 
     /**
      * Default constructor
@@ -37,6 +38,7 @@ public abstract class Book {
      * @param price
      * @param dateOfPublication 
      * @param amountInStock 
+     * @param amountSold 
      */
     public Book(String title, String authorName, Genre genre, BigDecimal price, LocalDate dateOfPublication, int amountInStock, int amountSold) {
         bookId = nextBookId;
@@ -48,12 +50,7 @@ public abstract class Book {
         setDateOfPublication(dateOfPublication);
         setAmountInStock(amountInStock);
         setAmountSold(amountSold);
-        try {
-            BufferedImage bufferedImage = ImageIO.read(new File("./src/images/placeholder-cover.png"));
-            cover = SwingFXUtils.toFXImage(bufferedImage, null);
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
+        setCover(new File("./src/images/placeholder-cover.png"));
         this.amountSold = amountSold;
         
     }
@@ -70,7 +67,7 @@ public abstract class Book {
      * @param cover 
      */
     public Book(String title, String authorName, Genre genre, BigDecimal price,
-            LocalDate dateOfPublication, int amountInStock, int amountSold, Image cover) {
+            LocalDate dateOfPublication, int amountInStock, int amountSold, File cover) {
         this(title, authorName, genre, price, dateOfPublication, amountInStock, amountSold);
         this.cover = cover;
     }
@@ -161,6 +158,102 @@ public abstract class Book {
             throw new IllegalArgumentException("The book can't be from the future");
         }
     }
+    
+    public void setCover(File cover) {
+        this.cover = cover;
+    }
+    
+    /**
+     * This method will store the book cover image to the local server server
+     * @throws IOException 
+     */
+    public void copyImageFile() throws IOException
+    {
+        Path sourcePath = cover.toPath();
+        
+        String uniqueFileName = getUniqueFileName(cover.getName());
+        
+        Path targetPath = Paths.get("./src/images/"+uniqueFileName);
+        
+        Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+        
+        cover = new File(targetPath.toString());
+    }
+    
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    private String getUniqueFileName(String name) {
+        String newName;
+        
+        SecureRandom rng = new SecureRandom();
+        
+        do
+        {
+            newName = "";
+            
+            for (int count=1; count <=32; count++)
+            {
+                int nextChar;
+                
+                do
+                {
+                    nextChar = rng.nextInt(123);
+                } while(!validCharacterValue(nextChar));
+                
+                newName = String.format("%s%c", newName, nextChar);
+            }
+            newName += name;
+            
+        } while (!uniqueFileInDirectory(newName));
+        
+        return newName;
+    }
+    
+    /**
+     * 
+     * @param fileName
+     * @return 
+     */
+    
+    public boolean uniqueFileInDirectory(String fileName)
+    {
+        File directory = new File("./src/images/");
+        
+        File[] dir_contents = directory.listFiles();
+                
+        for (File file: dir_contents)
+        {
+            if (file.getName().equals(fileName))
+                return false;
+        }
+        return true;
+    }
+    
+    /**
+     * 
+     * @param asciiValue
+     * @return 
+     */
+    public boolean validCharacterValue(int asciiValue)
+    {
+        
+        //0-9 = ASCII range 48 to 57
+        if (asciiValue >= 48 && asciiValue <= 57)
+            return true;
+        
+        //A-Z = ASCII range 65 to 90
+        if (asciiValue >= 65 && asciiValue <= 90)
+            return true;
+        
+        //a-z = ASCII range 97 to 122
+        if (asciiValue >= 97 && asciiValue <= 122)
+            return true;
+        
+        return false;
+    }
    
     public int getBookId() {
         return bookId;
@@ -186,7 +279,7 @@ public abstract class Book {
         return dateOfPublication;
     }
 
-    public Image getCover() {
+    public File getCover() {
         return cover;
     }
 
