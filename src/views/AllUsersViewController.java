@@ -60,6 +60,7 @@ public class AllUsersViewController implements Initializable {
         phoneNumColumn.setCellValueFactory(new PropertyValueFactory<User, String>("phoneNum"));
         
         editUserButton.setDisable(true);
+        nameLabel.setText(SceneChanger.getLoggedInUser().getUsername());
         
         try{
             loadUsers();
@@ -72,7 +73,7 @@ public class AllUsersViewController implements Initializable {
     }    
     public void addUserButtonPushed(ActionEvent event) throws IOException {
         SceneChanger sc = new SceneChanger();
-        sc.changeScenes(event, "RegisterNewUser.fxml", "Register New User");
+        sc.changeScenes(event, "RegisterNewUserView.fxml", "Register New User");
     }
     public void backButtonPushed(ActionEvent event) throws IOException {
         SceneChanger sc = new SceneChanger();
@@ -83,7 +84,7 @@ public class AllUsersViewController implements Initializable {
         User user = this.userdTableView.getSelectionModel().getSelectedItem();
         RegisterNewUserViewController controller = new RegisterNewUserViewController();
         
-        sc.changeScenes(event, "NewUserView.fxml", "Edit Volunteer", user, controller);
+        sc.changeScenes(event, "RegisterNewUserView.fxml", "Edit User", user, controller);
     }
     
     public void loadUsers() throws SQLException

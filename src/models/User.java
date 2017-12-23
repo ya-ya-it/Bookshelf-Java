@@ -86,8 +86,8 @@ public class User {
             conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/fictionBookShelf?useSSL=false", "root", "root");
             
             //2. Create a String that holds the query with ? as user inputs
-            String sql = "NSERT INTO users (username, phoneNum, password, salt, isAdmin) VALUES " +
-"                                   (?, ?, ?, ?)";
+            String sql = "INSERT INTO users (username, phoneNum, password, salt, isAdmin) VALUES " +
+                         " (?, ?, ?, ?, ?)";
                     
             //3. prepare the query
             preparedStatement = conn.prepareStatement(sql);
@@ -100,6 +100,7 @@ public class User {
             preparedStatement.setBoolean(5, admin);
             
             preparedStatement.executeUpdate();
+            
         }
         catch (Exception e)
         {
@@ -119,7 +120,7 @@ public class User {
     /**
      * This will update the Volunteer in the database
      */
-    public void updateVolunteerInDB() throws SQLException
+    public void updateUserInDB() throws SQLException
     {
         Connection conn = null;
         PreparedStatement preparedStatement = null;
@@ -159,6 +160,55 @@ public class User {
             if (preparedStatement != null)
                 preparedStatement.close();
         }
+    }
+        
+        public void changePassword(String newPassword) throws NoSuchAlgorithmException, SQLException
+    {
+        salt = PasswordGenerator.getSalt();
+        password = PasswordGenerator.getSHA512Password(newPassword, salt);
+        
+        Connection conn = null;
+        PreparedStatement preparedStatement = null;
+        
+        try{
+            //1.  connect to the DB
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/fictionBookShelf?useSSL=false", "root", "root");
+            
+            //2.  create a String that holds our SQL update command with ? for user inputs
+            String sql = "UPDATE users SET password = ?, salt = ?"
+                         + "WHERE userId = ?";
+            
+            //3. prepare the query against SQL injection
+            preparedStatement = conn.prepareStatement(sql);
+               
+            //4. bind the parameters
+            preparedStatement.setString(1, password);
+            preparedStatement.setBlob(2, new javax.sql.rowset.serial.SerialBlob(salt));
+            preparedStatement.setInt(3, userId);
+            
+            //6. run the command on the SQL server
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+        }
+        catch (SQLException e)
+        {
+            System.err.println(e.getMessage());
+        }
+        finally
+        {
+            if (conn != null)
+                conn.close();
+            if (preparedStatement != null)
+                preparedStatement.close();
+        }
         
     }
+
+    @Override
+    public String toString() {
+        return "User{" + "userId=" + userId + ", username=" + username + ", password=" + password + ", phoneNum=" + phoneNum + ", salt=" + salt + ", admin=" + admin + '}';
+    }
+     
+    
+    
 }

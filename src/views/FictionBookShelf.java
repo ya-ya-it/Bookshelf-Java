@@ -14,7 +14,7 @@ public class FictionBookShelf extends Application {
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("views/FictionBookshelfView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("views/LoginView.fxml"));
         Scene scene = new Scene(root);
         
         primaryStage.setTitle("Bookshelf");

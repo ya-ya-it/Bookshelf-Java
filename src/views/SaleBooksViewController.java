@@ -9,9 +9,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
@@ -38,15 +35,6 @@ public class SaleBooksViewController implements Initializable, ControllerClass {
     private Spinner<Integer> amountSoldSpinner;
 
     @FXML
-    private LineChart<?, ?> salesBarChart;
-
-    @FXML
-    private CategoryAxis Xaxis;
-
-    @FXML
-    private NumberAxis Yaxis;
-
-    @FXML
     private Label errorMsgLabel;
 
     @FXML
@@ -57,7 +45,7 @@ public class SaleBooksViewController implements Initializable, ControllerClass {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        nameLabel.setText(SceneChanger.getLoggedInUser().getUsername());
     }    
 
     @Override

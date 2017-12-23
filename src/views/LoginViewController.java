@@ -87,7 +87,7 @@ public class LoginViewController implements Initializable {
                 int blobLength = (int) blob.length();
                 salt = blob.getBytes(1, blobLength);
                 
-                admin = resultSet.getBoolean("admin");
+                admin = resultSet.getBoolean("isAdmin");
                 
                 user = new User(resultSet.getString("username"),
                                                    resultSet.getString("phoneNum"),
@@ -112,7 +112,7 @@ public class LoginViewController implements Initializable {
             {
                 //create an instance of the controller class for log hours view
                 SaleBooksViewController controllerClass = new SaleBooksViewController();
-                sc.changeScenes(event, "SaleBooksView.fxml", "Sale Book", user, controllerClass);
+                sc.changeScenes(event, "FictionBookshelfView.fxml", "Sale Book", user, controllerClass);
             }
             else
                 //if the do not match, update the error message

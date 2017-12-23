@@ -17,11 +17,13 @@ CREATE TABLE fictionBooks (
     bookCover VARCHAR(300)
  );
  
+ DROP TABLE USERS;
+ 
  CREATE TABLE users (
 	userId int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50),
-    contactInfo VARCHAR(50),
-    password VARCHAR(100),
+    phoneNum VARCHAR(50),
+    password VARCHAR(300),
     salt BLOB,
     isAdmin BOOLEAN
  );
@@ -35,9 +37,9 @@ CREATE TABLE fictionBooks (
  
  SELECT * FROM fictionBooks;
  
- INSERT INTO users (username, contactInfo, password, isAdmin) VALUES
- ('Dasha', 'ya-ya-it@yandex.com', 'password', true);
- INSERT INTO users (username, contactInfo, password, isAdmin) VALUES
- ('User', 'test@test.com', 'password', false);
+ INSERT INTO users (username, phoneNum, password, isAdmin) VALUES
+ ('Dasha', '705-222-2244', 'password', true);
+ INSERT INTO users (username, phoneNum, password, isAdmin) VALUES
+ ('User', '705-222-2255', 'password', false);
  
  SELECT * FROM users;

@@ -17,17 +17,19 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import models.User;
 
 /**
  * FXML Controller class for FictionBookShelf view
  *
  * @author Dasha
  */
-public class FictionBookshelfViewController implements Initializable {
+public class FictionBookshelfViewController implements Initializable, ControllerClass {
 
     @FXML private TableView<FictionBook> bookShelf;
     @FXML private TableColumn<FictionBook, String> titleColumn;
@@ -36,11 +38,13 @@ public class FictionBookshelfViewController implements Initializable {
     @FXML private TableColumn<FictionBook, BigDecimal> priceColumn;
     @FXML private TableColumn<FictionBook, LocalDate> publicationDateColumn;
     @FXML private TableColumn<FictionBook, Integer> amountInStockColumn;
+    @FXML private Button sellBookButton;
     
     @FXML private Label totalSaleLabel;
     @FXML private Label bookInStocLabel;
     @FXML private Label bookSoldLabel;
     @FXML private Label totalInventoryPriceLavel;
+    @FXML private Label usernameLabel;
     
     ObservableList<FictionBook> books;
     
@@ -82,6 +86,9 @@ public class FictionBookshelfViewController implements Initializable {
         bookInStocLabel.setText(Integer.toString(booksInStock));
         totalSaleLabel.setText(currencyFormat(totalSales));
         
+        usernameLabel.setText(SceneChanger.getLoggedInUser().getUsername());
+        sellBookButton.setDisable(true);
+        
    }
     
     /**
@@ -94,6 +101,11 @@ public class FictionBookshelfViewController implements Initializable {
         
         SceneChanger sc = new SceneChanger();
         sc.changeScenes(event, "AddNewBookView.fxml", "Add new book");
+        
+    }
+    
+    public void salesReportButtonPushed(ActionEvent event) throws IOException
+    {
         
     }
     
@@ -110,7 +122,12 @@ public class FictionBookshelfViewController implements Initializable {
      * update labels with business information
      * @param event 
      */
-    public void sellBookButtonPushed(ActionEvent event) throws SQLException {
+    public void sellBookButtonPushed(ActionEvent event) throws SQLException, IOException {
+        SceneChanger sc = new SceneChanger();
+        FictionBook book = this.bookShelf.getSelectionModel().getSelectedItem();
+        SaleBooksViewController controller = new SaleBooksViewController();
+        
+        sc.changeScenes(event, "SaleBooksView.fxml", "Sale Book", book, controller);
     }
     
     public static String currencyFormat(BigDecimal n) {
@@ -189,5 +206,18 @@ public class FictionBookshelfViewController implements Initializable {
        bookSoldLabel.setText(Integer.toString(booksSold));
        bookInStocLabel.setText(Integer.toString(booksInStock));
        totalSaleLabel.setText(currencyFormat(totalSales));
+    }
+
+    @Override
+    public void preloadData(FictionBook book) {
+    }
+
+    @Override
+    public void preloadData(User user) {
+    }
+    
+    public void bookSelected()
+    {
+        sellBookButton.setDisable(false);
     }
 }

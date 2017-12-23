@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -35,12 +34,11 @@
             <TextField fx:id="usernameTextField" GridPane.columnIndex="1" />
             <TextField fx:id="phoneNumTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="3" fx:id="xonfirmPasswordField" />
+            <PasswordField fx:id="confirmPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
       <Button layoutX="576.0" layoutY="494.0" mnemonicParsing="false" onAction="#saveUserButtonPushed" prefHeight="27.0" prefWidth="79.0" text="Save" />
       <Button layoutX="451.0" layoutY="494.0" mnemonicParsing="false" onAction="#backButtonPushed" prefHeight="27.0" prefWidth="79.0" text="Back" />
-      <ImageView fx:id="bookImage" fitHeight="126.0" fitWidth="160.0" layoutX="103.0" layoutY="407.0" pickOnBounds="true" preserveRatio="true" />
       <Label fx:id="errorMsg" layoutX="375.0" layoutY="446.0" text="Label" />
    </children>
 </AnchorPane>
