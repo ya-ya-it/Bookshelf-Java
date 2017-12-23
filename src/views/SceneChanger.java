@@ -8,10 +8,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import models.FictionBook;
+import models.User;
 
 
 
 public class SceneChanger {
+    
+    private static User loggedInUser;
     
     /**
      * This method will accept the title of the new scene, the .fxml file name for
@@ -34,7 +37,7 @@ public class SceneChanger {
     }
     
     /**
-     * This method will change scenes and preload the next scene with a Volunteer object
+     * This method will change scenes and preload the next scene with a Book object
      */
     public void changeScenes(ActionEvent event, String viewName, String title, FictionBook book, ControllerClass controllerClass) throws IOException  
     {
@@ -54,5 +57,36 @@ public class SceneChanger {
         stage.setTitle(title);
         stage.setScene(scene);
         stage.show();
+    }
+    
+    /**
+     * This method will change scenes and preload the next scene with a User object
+     */
+    public void changeScenes(ActionEvent event, String viewName, String title, User user, ControllerClass controllerClass) throws IOException  
+    {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(viewName));
+        Parent parent = loader.load();
+        
+        Scene scene = new Scene(parent);
+        
+        //access the controller class and preloaded the volunteer data
+        controllerClass = loader.getController();
+        controllerClass.preloadData(user);
+        
+        //get the stage from the event that was passed in
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        
+        stage.setTitle(title);
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    public static User getLoggedInUser() {
+        return loggedInUser;
+    }
+
+    public static void setLoggedInUser(User loggedInUser) {
+        SceneChanger.loggedInUser = loggedInUser;
     }
 }

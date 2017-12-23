@@ -54,6 +54,7 @@
                   <Button mnemonicParsing="false" onAction="#sellBookButtonPushed" prefHeight="27.0" prefWidth="113.0" text="Sell Book" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                   <Label text="Total inventory price" GridPane.rowIndex="1" />
                   <Label fx:id="totalInventoryPriceLavel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button mnemonicParsing="false" onAction="#allUsersButtonPushed" prefWidth="113.0" text="All users" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                </children>
             </GridPane>
          </children>

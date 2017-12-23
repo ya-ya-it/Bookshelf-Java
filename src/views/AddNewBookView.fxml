@@ -4,6 +4,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -41,18 +42,18 @@
             <TextField fx:id="mainCharacterField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <DatePicker fx:id="dateOfPublicationDatePicker" prefHeight="27.0" prefWidth="267.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <ComboBox fx:id="fictionGenreComboBox" prefHeight="27.0" prefWidth="281.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="priceField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Label text="Book cover" GridPane.rowIndex="6" />
             <Button mnemonicParsing="false" onAction="#chooseImageButtonPushed" text="Choose file..." GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <Label text="Amount in stock" GridPane.rowIndex="7" />
             <Label text="Amount sold" GridPane.rowIndex="8" />
-            <TextField fx:id="amountInStockField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <TextField fx:id="amountSoldField" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <Spinner fx:id="amountInStockSpinner" prefHeight="27.0" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Spinner fx:id="amountSoldSpinner" prefHeight="27.0" prefWidth="280.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <TextField fx:id="priceField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
          </children>
       </GridPane>
       <Button layoutX="566.0" layoutY="484.0" mnemonicParsing="false" onAction="#saveBookButtonPushed" prefHeight="27.0" prefWidth="79.0" text="Save" />
       <Button layoutX="441.0" layoutY="484.0" mnemonicParsing="false" onAction="#backButtonPushed" prefHeight="27.0" prefWidth="79.0" text="Back" />
       <ImageView fx:id="bookImage" fitHeight="126.0" fitWidth="160.0" layoutX="93.0" layoutY="397.0" pickOnBounds="true" preserveRatio="true" />
-      <Label fx:id="errorMsg" layoutX="441.0" layoutY="436.0" text="Label" />
+      <Label fx:id="errorMsg" layoutX="365.0" layoutY="436.0" text="Label" />
    </children>
 </AnchorPane>
