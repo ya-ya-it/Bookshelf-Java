@@ -38,26 +38,16 @@ public class AddNewBookViewController implements Initializable {
     private FictionBook book;
     private boolean imageChanged;
 
-    @FXML
-    private TextField titleField;
-    @FXML
-    private TextField authorNameField;
-    @FXML
-    private ComboBox fictionGenreComboBox;
-    @FXML
-    private TextField mainCharacterField;
-    @FXML
-    private DatePicker dateOfPublicationDatePicker;
-    @FXML
-    private TextField priceField;
-    @FXML
-    private Spinner amountInStockSpinner;
-    @FXML
-    private Spinner amountSoldSpinner;
-    @FXML
-    private ImageView bookImage;
-    @FXML
-    private Label errorMsg;
+    @FXML private TextField titleField;
+    @FXML private TextField authorNameField;
+    @FXML private ComboBox fictionGenreComboBox;
+    @FXML private TextField mainCharacterField;
+    @FXML private DatePicker dateOfPublicationDatePicker;
+    @FXML private TextField priceField;
+    @FXML private Spinner amountInStockSpinner;
+    @FXML private Spinner amountSoldSpinner;
+    @FXML private ImageView bookImage;
+    @FXML private Label errorMsg;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -139,8 +129,8 @@ public class AddNewBookViewController implements Initializable {
                         amountSold);
             }
 
-            book.insertIntoDB();
             book.copyImageFile();
+            book.insertIntoDB();
 
             SceneChanger sc = new SceneChanger();
             sc.changeScenes(event, "FictionBookshelfView.fxml", "Bookshelf");

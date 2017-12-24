@@ -38,24 +38,28 @@ public class FictionBookshelfViewController implements Initializable, Controller
     @FXML private TableColumn<FictionBook, BigDecimal> priceColumn;
     @FXML private TableColumn<FictionBook, LocalDate> publicationDateColumn;
     @FXML private TableColumn<FictionBook, Integer> amountInStockColumn;
-    @FXML private Button sellBookButton;
     
+    @FXML private Button sellBookButton;
+    @FXML private Button allUsersButton;
+    @FXML private Button addNewBookButton;
+    @FXML private Button salesReportButton;
+
     @FXML private Label totalSaleLabel;
     @FXML private Label bookInStocLabel;
     @FXML private Label bookSoldLabel;
     @FXML private Label totalInventoryPriceLavel;
     @FXML private Label usernameLabel;
-    
+
     ObservableList<FictionBook> books;
-    
+
     BigDecimal totalSales = new BigDecimal("0");
     int booksSold = 0;
     int booksInStock = 0;
     BigDecimal totalInventoryPrice = new BigDecimal("0");
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         // set up columns in the table
         titleColumn.setCellValueFactory(new PropertyValueFactory<FictionBook, String>("title"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<FictionBook, String>("authorName"));
@@ -63,149 +67,176 @@ public class FictionBookshelfViewController implements Initializable, Controller
         priceColumn.setCellValueFactory(new PropertyValueFactory<FictionBook, BigDecimal>("price"));
         publicationDateColumn.setCellValueFactory(new PropertyValueFactory<FictionBook, LocalDate>("dateOfPublication"));
         amountInStockColumn.setCellValueFactory(new PropertyValueFactory<FictionBook, Integer>("amountInStock"));
-        
-        try{
+
+        try {
             loadBooks();
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-       
+
         // set up labels with business information
         ObservableList<FictionBook> books = bookShelf.getItems();
-        for(FictionBook book : books){
+        for (FictionBook book : books) {
             booksSold += book.getAmountSold();
             totalInventoryPrice = totalInventoryPrice.add((book.getPrice().multiply(new BigDecimal(book.getAmountInStock()))));
             booksInStock += book.getAmountInStock();
             totalSales = totalSales.add(book.getPrice().multiply(new BigDecimal(book.getAmountSold())));
         }
-        
+
         totalInventoryPriceLavel.setText(currencyFormat(totalInventoryPrice));
         bookSoldLabel.setText(Integer.toString(booksSold));
         bookInStocLabel.setText(Integer.toString(booksInStock));
         totalSaleLabel.setText(currencyFormat(totalSales));
-        
+
         usernameLabel.setText(SceneChanger.getLoggedInUser().getUsername());
         sellBookButton.setDisable(true);
-        
-   }
-    
+
+        // disables admin console
+        if (!SceneChanger.getLoggedInUser().isAdmin()) {
+            allUsersButton.setVisible(false);
+            addNewBookButton.setVisible(false);
+            salesReportButton.setVisible(false);
+        }
+
+    }
+
     /**
-     * This method call new window when the Add button is pushed.
+     * This method calls new window to add new book when the Add button is pushed.
+     *
+     * @param event
+     * @throws IOException
+     */
+    public void addNewBookButtonPushed(ActionEvent event) throws IOException {
+
+        SceneChanger sc = new SceneChanger();
+        sc.changeScenes(event, "AddNewBookView.fxml", "Add new book");
+
+    }
+
+    /**
+     * This method calls new window to show sales report
      * @param event
      * @throws IOException 
      */
-    public void addNewBookButtonPushed(ActionEvent event) throws IOException
-    {
-        
+    public void salesReportButtonPushed(ActionEvent event) throws IOException {
         SceneChanger sc = new SceneChanger();
-        sc.changeScenes(event, "AddNewBookView.fxml", "Add new book");
-        
+        sc.changeScenes(event, "SalesReviewView.fxml", "Sales report");
     }
-    
-    public void salesReportButtonPushed(ActionEvent event) throws IOException
-    {
-        
-    }
-    
-        public void allUsersButtonPushed(ActionEvent event) throws IOException
-    {
-        
+
+    /**
+     * This this method calls window with all users table when All users button
+     * pushed
+     * @param event
+     * @throws IOException 
+     */
+    public void allUsersButtonPushed(ActionEvent event) throws IOException {
         SceneChanger sc = new SceneChanger();
         sc.changeScenes(event, "AllUsersView.fxml", "Users");
-        
     }
-    
+
     /**
-     * This method removes data from the table when the Sell button is pushed and
-     * update labels with business information
-     * @param event 
+     * This method removes data from the table when the Sell button is pushed
+     * and update labels with business information
+     *
+     * @param event
      */
     public void sellBookButtonPushed(ActionEvent event) throws SQLException, IOException {
         SceneChanger sc = new SceneChanger();
         FictionBook book = this.bookShelf.getSelectionModel().getSelectedItem();
         SaleBooksViewController controller = new SaleBooksViewController();
-        
+
         sc.changeScenes(event, "SaleBooksView.fxml", "Sale Book", book, controller);
     }
-    
+
+    /**
+     * This method brings user to edit window when Edit user button pushed
+     * @param event
+     * @throws IOException 
+     */
+    public void editUserButtonPushed(ActionEvent event) throws IOException {
+        SceneChanger sc = new SceneChanger();
+        User user = SceneChanger.getLoggedInUser();
+        RegisterNewUserViewController controller = new RegisterNewUserViewController();
+        sc.changeScenes(event, "RegisterNewUserView.fxml", "Edit User", user, controller);
+    }
+
+    /**
+     * This method deletes information about the users session and bring user to
+     * Login window
+     * @param event
+     * @throws IOException 
+     */
+    public void logOutButtonPushed(ActionEvent event) throws IOException {
+        SceneChanger.setLoggedInUser(null);
+        SceneChanger sc = new SceneChanger();
+        sc.changeScenes(event, "LoginView.fxml", "Login");
+    }
+
+    /**
+     * This method format business information on the bottom panel to currency format
+     * @param n
+     * @return 
+     */
     public static String currencyFormat(BigDecimal n) {
         return NumberFormat.getCurrencyInstance().format(n);
     }
-    
+
     /**
-     * This method load new books to the TableView and update labels with 
+     * This method load new books to the TableView and update labels with
      * business information
-     * @param newList 
+     *
+     * @param newList
      */
-    public void loadBooks() throws SQLException
-    {
+    public void loadBooks() throws SQLException {
         ObservableList<FictionBook> books = FXCollections.observableArrayList();
-        
+
         Connection conn = null;
         Statement statement = null;
         ResultSet resultSet = null;
-        
-        try{
+
+        try {
             //1. connect to the database
             conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/fictionBookShelf?useSSL=false", "root", "root");
+            
             //2.  create a statement object
             statement = conn.createStatement();
-            
+
             //3.  create the SQL query
             resultSet = statement.executeQuery("SELECT * FROM fictionBooks");
-            
-            //4.  create volunteer objects from each record
-            while (resultSet.next())
-            {
-                
+
+            //4.  create book objects from each record
+            while (resultSet.next()) {
+
                 //title, author, genre, mainCharacters,price, 
                 //dateOfPublication, amountInStock,amountSold,bookCover
-                
                 FictionBook book = new FictionBook(resultSet.getString("title"),
-                                                   resultSet.getString("authorName"),
-                                                   FictionBook.FictionGenre.valueOf(resultSet.getString("fictionGenre")),
-                                                   resultSet.getString("mainCharacters"),
-                                                   resultSet.getBigDecimal("price"),
-                                                   resultSet.getDate("dateOfPublication").toLocalDate(),
-                                                   resultSet.getInt("amountInStock"),
-                                                   resultSet.getInt("amountSold"));
+                        resultSet.getString("authorName"),
+                        FictionBook.FictionGenre.valueOf(resultSet.getString("fictionGenre")),
+                        resultSet.getString("mainCharacters"),
+                        resultSet.getBigDecimal("price"),
+                        resultSet.getDate("dateOfPublication").toLocalDate(),
+                        resultSet.getInt("amountInStock"),
+                        resultSet.getInt("amountSold"));
                 book.setBookId(resultSet.getInt("bookId"));
-                //book.setCover(new File(resultSet.getString("bookCover")));
-                
+
                 books.add(book);
             }
-            
+
             bookShelf.getItems().addAll(books);
-            
-            
-        } catch (Exception e)
-        {
+
+        } catch (Exception e) {
             System.err.println(e);
-        }
-        finally
-        {
-            if (conn != null)
+        } finally {
+            if (conn != null) {
                 conn.close();
-            if(statement != null)
+            }
+            if (statement != null) {
                 statement.close();
-            if(resultSet != null)
+            }
+            if (resultSet != null) {
                 resultSet.close();
+            }
         }
-        
-        books = bookShelf.getItems();
-        for(FictionBook book : books){
-            booksSold += book.getAmountSold();
-            totalInventoryPrice = totalInventoryPrice.add((book.getPrice().multiply(new BigDecimal(book.getAmountInStock()))));
-            booksInStock += book.getAmountInStock();
-            totalSales = totalSales.add(book.getPrice().multiply(new BigDecimal(book.getAmountSold())));
-        }
-        
-       totalInventoryPriceLavel.setText(currencyFormat(totalInventoryPrice));
-       bookSoldLabel.setText(Integer.toString(booksSold));
-       bookInStocLabel.setText(Integer.toString(booksInStock));
-       totalSaleLabel.setText(currencyFormat(totalSales));
     }
 
     @Override
@@ -215,9 +246,12 @@ public class FictionBookshelfViewController implements Initializable, Controller
     @Override
     public void preloadData(User user) {
     }
-    
-    public void bookSelected()
-    {
+
+    /**
+     * This method set sell button disable to false when some book selected from
+     * the table
+     */
+    public void bookSelected() {
         sellBookButton.setDisable(false);
     }
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package views;
 
 import java.io.IOException;
@@ -23,27 +18,20 @@ import models.User;
 /**
  * FXML Controller class
  *
- * @author dasha
+ * @author Dasha
  */
 public class RegisterNewUserViewController implements Initializable, ControllerClass {
 
-    @FXML
-    private CheckBox isAdminCheckBox;
+    @FXML private CheckBox isAdminCheckBox;
 
-    @FXML
-    private TextField usernameTextField;
+    @FXML private TextField usernameTextField;
+    @FXML private TextField phoneNumTextField;
 
-    @FXML
-    private TextField phoneNumTextField;
+    @FXML private PasswordField passwordField;
+    @FXML private PasswordField confirmPasswordField;
 
-    @FXML
-    private PasswordField passwordField;
-
-    @FXML
-    private PasswordField confirmPasswordField;
-
-    @FXML
-    private Label errorMsg;
+    @FXML private Label errorMsg;
+    @FXML private Label adminLabel;
 
     private User user;
 
@@ -52,17 +40,18 @@ public class RegisterNewUserViewController implements Initializable, ControllerC
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-      //  if (!SceneChanger.getLoggedInUser().isAdmin()) {
+        if (user == null || !SceneChanger.getLoggedInUser().isAdmin()) {
             isAdminCheckBox.setVisible(false);
-       // }
+            adminLabel.setVisible(false);
+
+        }
         errorMsg.setText("");
     }
 
     public void saveUserButtonPushed(ActionEvent event) throws NoSuchAlgorithmException, SQLException, IOException {
         if (validPassword() || user != null) {
             try {
-                if (user != null) //we need to edit/update an existing volunteer
-                {
+                if (user != null) {
                     //update the user information
                     updateUser();
                     user.updateUserInDB();
@@ -73,28 +62,36 @@ public class RegisterNewUserViewController implements Initializable, ControllerC
                             user.changePassword(passwordField.getText());
                         }
                     }
-                } else //we need to create a new volunteer
+                } else //create new user
                 {
-
                     user = new User(usernameTextField.getText(), phoneNumTextField.getText(),
                             passwordField.getText(),
                             isAdminCheckBox.isSelected());
                 }
-                errorMsg.setText("");    //do not show errors if creating Volunteer was successful
+                errorMsg.setText("");
                 user.insertIntoDB();
 
+                SaleBooksViewController controllerClass = new SaleBooksViewController();
                 SceneChanger sc = new SceneChanger();
-                sc.changeScenes(event, "AllUsersView.fxml", "All users");
+                SceneChanger.setLoggedInUser(user);
+                
+                if (user != null && !SceneChanger.getLoggedInUser().isAdmin()) {
+                    sc.changeScenes(event, "FictionBookshelfView.fxml", "Bookshelf", user, controllerClass);
+                } else {
+                    sc.changeScenes(event, "AllUsersView.fxml", "Users", user, controllerClass);
+                }
             } catch (Exception e) {
                 errorMsg.setText(e.getMessage());
+                System.out.println(errorMsg);
             }
 
         }
     }
-        /**
-         * This method will validate that the passwords match
-         *
-         */
+
+    /**
+     * This method will validate that the password match confirm password
+     *
+     */
     public boolean validPassword() {
         if (passwordField.getText().length() < 5) {
             errorMsg.setText("Passwords must be greater than 5 characters in length");
@@ -109,7 +106,7 @@ public class RegisterNewUserViewController implements Initializable, ControllerC
     }
 
     /**
-     * This method will read from the GUI fields and update the volunteer object
+     * This method will read from the GUI fields and update the user object
      */
     public void updateUser() throws IOException {
         user.setUsername(usernameTextField.getText());
@@ -119,9 +116,21 @@ public class RegisterNewUserViewController implements Initializable, ControllerC
 
     }
 
+    /**
+     * This method will bring user to the bookshelf if user is logged in, or to the
+     * login window if user is not logged, or to the lists of users if the user is admin
+     * @param event
+     * @throws IOException 
+     */
     public void backButtonPushed(ActionEvent event) throws IOException {
         SceneChanger sc = new SceneChanger();
-        sc.changeScenes(event, "FictionBookshelfView.fxml", "Bookshelf");
+        if (user != null && !SceneChanger.getLoggedInUser().isAdmin()) {
+            sc.changeScenes(event, "FictionBookshelfView.fxml", "Bookshelf");
+        } else if (user != null && SceneChanger.getLoggedInUser().isAdmin()) {
+            sc.changeScenes(event, "AllUsersView.fxml", "Users");
+        } else {
+            sc.changeScenes(event, "LoginView.fxml", "Log in");
+        }
     }
 
     @Override
@@ -132,6 +141,7 @@ public class RegisterNewUserViewController implements Initializable, ControllerC
 
         if (user.isAdmin()) {
             isAdminCheckBox.setSelected(true);
+            adminLabel.setVisible(true);
         }
     }
 

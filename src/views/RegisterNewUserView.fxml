@@ -29,7 +29,7 @@
             <Label text="Phone number" GridPane.rowIndex="1" />
             <Label text="Password" GridPane.rowIndex="2" />
             <Label text="Confirm password" GridPane.rowIndex="3" />
-            <Label text="Admin" GridPane.rowIndex="4" />
+            <Label fx:id="adminLabel" text="Admin" GridPane.rowIndex="4" />
             <CheckBox fx:id="isAdminCheckBox" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <TextField fx:id="usernameTextField" GridPane.columnIndex="1" />
             <TextField fx:id="phoneNumTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -39,6 +39,6 @@
       </GridPane>
       <Button layoutX="576.0" layoutY="494.0" mnemonicParsing="false" onAction="#saveUserButtonPushed" prefHeight="27.0" prefWidth="79.0" text="Save" />
       <Button layoutX="451.0" layoutY="494.0" mnemonicParsing="false" onAction="#backButtonPushed" prefHeight="27.0" prefWidth="79.0" text="Back" />
-      <Label fx:id="errorMsg" layoutX="375.0" layoutY="446.0" text="Label" />
+      <Label fx:id="errorMsg" layoutX="417.0" layoutY="429.0" text="Label" />
    </children>
 </AnchorPane>

@@ -82,10 +82,18 @@ public class SceneChanger {
         stage.show();
     }
     
+    /**
+     * This is getter for logged in user object
+     * @return 
+     */
     public static User getLoggedInUser() {
         return loggedInUser;
     }
 
+    /**
+     * This is setter for the logged in user object
+     * @param loggedInUser 
+     */
     public static void setLoggedInUser(User loggedInUser) {
         SceneChanger.loggedInUser = loggedInUser;
     }
