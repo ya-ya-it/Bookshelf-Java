@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
@@ -16,29 +17,22 @@ import models.FictionBook;
 import models.User;
 
 /**
- * FXML Controller class
+ * FXML Sale books controller class
  *
  * @author dasha
  */
 public class SaleBooksViewController implements Initializable, ControllerClass {
 
-    @FXML
-    private TextField titleTextField;
+    @FXML private TextField titleTextField;
+    @FXML private TextField authorTextField;
+    @FXML private TextField priceTextField;
 
-    @FXML
-    private TextField authorTextField;
+    @FXML private Spinner<Integer> amountSoldSpinner;
+    
+    @FXML private DatePicker dateSoldDatePicker;
 
-    @FXML
-    private TextField priceTextField;
-
-    @FXML
-    private Spinner<Integer> amountSoldSpinner;
-
-    @FXML
-    private Label errorMsgLabel;
-
-    @FXML
-    private Label nameLabel;
+    @FXML private Label errorMsgLabel;
+    @FXML private Label nameLabel;
     
     /**
      * Initializes the controller class.

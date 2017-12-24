@@ -1,7 +1,6 @@
 package models;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.math.BigDecimal;
@@ -9,7 +8,7 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import javafx.scene.image.Image;
+import views.SceneChanger;
 
 /**
  *
@@ -37,7 +36,8 @@ public class FictionBook extends Book{
      * @param amountSold 
      */
     public FictionBook(String title, String authorName, FictionGenre fictionGenre,
-            String mainCharacter, BigDecimal price, LocalDate dateOfPublication, int amountInStock, int amountSold) {
+            String mainCharacter, BigDecimal price, LocalDate dateOfPublication, 
+            int amountInStock, int amountSold) {
         super(title, authorName, genre, price, dateOfPublication, amountInStock, amountSold);
         super.genre = Book.Genre.FICTION;
         setMainCharacter(mainCharacter);
@@ -57,7 +57,8 @@ public class FictionBook extends Book{
      * @param cover 
      */
     public FictionBook(String title, String authorName, FictionGenre fictionGenre,
-            String mainCharacter, BigDecimal price, LocalDate dateOfPublication, int amountInStock, int amountSold, File cover) {
+            String mainCharacter, BigDecimal price, LocalDate dateOfPublication, 
+            int amountInStock, int amountSold, File cover) {
         super(title, authorName, genre, price, dateOfPublication, amountInStock, amountSold);      
         super.genre = Book.Genre.FICTION;
         setMainCharacter(mainCharacter);
@@ -113,14 +114,15 @@ public class FictionBook extends Book{
             conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/fictionBookshelf?useSSL=false", "root", "root");
             
             //2. Create a String that holds the query with ? as user inputs
-            String sql = " INSERT INTO fictionBooks (title, authorName, fictionGenre, mainCharacters, price, dateOfPublication, amountInStock, amountSold, bookCover) VALUES" +
-"                       (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            String sql = " INSERT INTO fictionBooks (title, authorName, fictionGenre, mainCharacters, price, dateOfPublication, amountInStock, amountSold, bookCover, userId) VALUES" +
+"                       (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
                     
             //3. prepare the query
             preparedStatement = conn.prepareStatement(sql);
             
-            //4. Convert the birthday into a SQL date
+            //4. Convert the dates into a SQL date
             Date dop = Date.valueOf(dateOfPublication);
+            
                
             //5. Bind the values to the parameters
             preparedStatement.setString(1, title);
@@ -132,6 +134,7 @@ public class FictionBook extends Book{
             preparedStatement.setInt(7, getAmountInStock());
             preparedStatement.setInt(8, getAmountSold());
             preparedStatement.setString(9, cover.getName());
+            preparedStatement.setInt(10, SceneChanger.getLoggedInUser().getUserId());
             
             preparedStatement.executeUpdate();
         }

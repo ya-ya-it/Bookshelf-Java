@@ -22,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import jdk.nashorn.internal.objects.Global;
 import models.User;
 
 /**
@@ -136,7 +137,6 @@ public class FictionBookshelfViewController implements Initializable, Controller
 
     /**
      * This method removes data from the table when the Sell button is pushed
-     * and update labels with business information
      *
      * @param event
      */

@@ -27,7 +27,7 @@ public abstract class Book {
         COMEDY, DRAMA, HORROR, TRAGEDY, FICTION, BIOGRAPHY
     };
     protected static Genre genre;
-    protected LocalDate dateOfPublication;
+    protected LocalDate dateOfPublication, dateSold;
     protected File cover;
 
     /**
@@ -84,6 +84,26 @@ public abstract class Book {
             this.price = price;
         }
     }
+
+    public LocalDate getDateSold() {
+        return dateSold;
+    }
+
+    /**
+     * This method validate the date of sale. It should be not greater
+     * then todays date.
+     *
+     * @param dateOfPublication
+     */
+    public void setDateSold(LocalDate dateSold) {
+        if (dateSold.isBefore(LocalDate.now()) || dateSold.isEqual(LocalDate.now())) {
+            this.dateSold = dateSold;
+        } else {
+            throw new IllegalArgumentException("Please enter the correct date");
+        }
+    }
+    
+    
 
     public void setGenre(Genre genre) {
         this.genre = genre;
