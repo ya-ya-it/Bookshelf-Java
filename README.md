@@ -8,8 +8,6 @@ assignment anyway - its really cool assignment - so I will do few more commits.
 Marry Christmas and Happy New Year!
 
 //TODO
-- Fix RegisterNewUserController
-- Create SaleBookController
 - Insert inventory
 Everything else is done
 </p>
