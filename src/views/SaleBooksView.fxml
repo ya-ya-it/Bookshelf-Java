@@ -47,8 +47,8 @@
             <Font name="System Bold" size="36.0" />
          </font>
       </Label>
-      <Button layoutX="576.0" layoutY="481.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="79.0" text="Save" />
-      <Button layoutX="451.0" layoutY="481.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="79.0" text="Back" />
+      <Button layoutX="576.0" layoutY="481.0" mnemonicParsing="false" onAction="#saveBookButtonPushed" prefHeight="27.0" prefWidth="79.0" text="Save" />
+      <Button layoutX="451.0" layoutY="481.0" mnemonicParsing="false" onAction="#backButtonPushed" prefHeight="27.0" prefWidth="79.0" text="Back" />
       <Label fx:id="errorMsgLabel" layoutX="14.0" layoutY="415.0" text="Label" />
       <Label layoutX="31.0" layoutY="60.0" text="Welcome," />
       <Label fx:id="nameLabel" layoutX="106.0" layoutY="60.0" text="Label" />

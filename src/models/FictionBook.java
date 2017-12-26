@@ -8,7 +8,6 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import views.SceneChanger;
 
 /**
  *
@@ -103,6 +102,10 @@ public class FictionBook extends Book{
                 fictionGenre + " cost " + price + ", publication date is " + dateOfPublication;
     }
     
+    /**
+     * This method inserts new book into the db
+     * @throws SQLException 
+     */
     public void insertIntoDB() throws SQLException
     {
         Connection conn = null;
@@ -114,8 +117,10 @@ public class FictionBook extends Book{
             conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/fictionBookshelf?useSSL=false", "root", "root");
             
             //2. Create a String that holds the query with ? as user inputs
-            String sql = " INSERT INTO fictionBooks (title, authorName, fictionGenre, mainCharacters, price, dateOfPublication, amountInStock, amountSold, bookCover, userId) VALUES" +
-"                       (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            String sql = " INSERT INTO fictionBooks (title, authorName, fictionGenre, mainCharacters, price, dateOfPublication, bookCover) VALUES" +
+                            "(?, ?, ?, ?, ?, ?, ?); "
+                    + " INSERT INTO inventory (bookId, amountInStock, amountSold) VALUES " +
+                        "(LAST_INSERT_ID(), ?, ?); ";
                     
             //3. prepare the query
             preparedStatement = conn.prepareStatement(sql);
@@ -131,10 +136,12 @@ public class FictionBook extends Book{
             preparedStatement.setString(4, mainCharacter);
             preparedStatement.setBigDecimal(5, price);
             preparedStatement.setDate(6, dop);
-            preparedStatement.setInt(7, getAmountInStock());
-            preparedStatement.setInt(8, getAmountSold());
-            preparedStatement.setString(9, cover.getName());
-            preparedStatement.setInt(10, SceneChanger.getLoggedInUser().getUserId());
+            preparedStatement.setString(7, cover.getName());
+            preparedStatement.setInt(8, getAmountInStock());
+            preparedStatement.setInt(9, getAmountSold());
+            
+            System.out.println(getAmountInStock());
+            System.out.println(getAmountSold());
             
             preparedStatement.executeUpdate();
         }

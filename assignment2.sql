@@ -4,7 +4,7 @@ CREATE DATABASE fictionBookshelf;
 
 USE fictionBookshelf;
 
-DROP TABLE fictionBooks;
+-- DROP TABLE fictionBooks;
 
 CREATE TABLE fictionBooks (
 	bookId int NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -14,15 +14,10 @@ CREATE TABLE fictionBooks (
     mainCharacters VARCHAR(50),
     price dec(9,2),
     dateOfPublication DATE,
-    amountInStock INT,
-    amountSold INT,
-    dateSold DATE,
-    bookCover VARCHAR(300),
-    userId INT NOT NULL,
-    FOREIGN KEY (userId) REFERENCES users (userId)
+    bookCover VARCHAR(300)
  );
- 
- DROP TABLE USERS;
+
+-- DROP TABLE USERS;
  
  CREATE TABLE users (
 	userId int NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -33,12 +28,39 @@ CREATE TABLE fictionBooks (
     isAdmin BOOLEAN
  );
  
- INSERT INTO fictionBooks (title, authorName, fictionGenre, mainCharacters, price, dateOfPublication, amountInStock, amountSold, dateSold,  userId) VALUES
- ('Alice in Wonderland', 'Lewis Carroll', 'ADVENTURE', 'Alice', 19.99, '1865-11-26',11, 2, '2016-05-24' , 1);
- INSERT INTO fictionBooks (title, authorName, fictionGenre, mainCharacters, price, dateOfPublication, amountInStock, amountSold, dateSold, userId) VALUES
- ('The Adventures of Sherlock Holmes', 'Sir Arthur Conan Doyle', 'ADVENTURE', 'Scherlock Holmes', 29.99, '1891-10-12', 12, 4, '2016-07-21',  1);
- INSERT INTO fictionBooks (title, authorName, fictionGenre, mainCharacters, price, dateOfPublication, amountInStock, amountSold, dateSold, userId) VALUES
- ('Harry Potter and the Philosophers Stone', 'J. K. Rowling.', 'ADVENTURE', 'Harry Potter', 9.99, '1997-06-26', 8, 4, '2016-03-18', 1);
+ -- DROP TABLE inventory;
+ 
+ CREATE TABLE inventory (
+	inventoryId int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    bookId int,
+    amountInStock int,
+    amountSold int,
+    FOREIGN KEY (bookId) REFERENCES fictionBooks (bookId)
+ );
+ 
+-- DROP TABLE SALES; 
+ 
+ CREATE TABLE sales (
+	saleId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    amountSold INT,
+    dateSold DATE,
+    userId int,
+    FOREIGN KEY (userId) REFERENCES users (userId)
+ );
+ 
+ INSERT INTO fictionBooks (title, authorName, fictionGenre, mainCharacters, price, dateOfPublication) VALUES
+ ('Alice in Wonderland', 'Lewis Carroll', 'ADVENTURE', 'Alice', 19.99, '1865-11-26');
+ INSERT INTO fictionBooks (title, authorName, fictionGenre, mainCharacters, price, dateOfPublication) VALUES
+ ('The Adventures of Sherlock Holmes', 'Sir Arthur Conan Doyle', 'ADVENTURE', 'Scherlock Holmes', 29.99, '1891-10-12');
+ INSERT INTO fictionBooks (title, authorName, fictionGenre, mainCharacters, price, dateOfPublication) VALUES
+ ('Harry Potter and the Philosophers Stone', 'J. K. Rowling.', 'ADVENTURE', 'Harry Potter', 9.99, '1997-06-26');
+ 
+ INSERT INTO fictionBooks (title, authorName, fictionGenre, mainCharacters, price, dateOfPublication) VALUES
+ ('Alice in Wonderland2', 'Lewis Carroll', 'ADVENTURE', 'Alice', 19.99, '1865-11-26');
+ INSERT INTO fictionBooks (title, authorName, fictionGenre, mainCharacters, price, dateOfPublication) VALUES
+ ('The Adventures of Sherlock Holmes2', 'Sir Arthur Conan Doyle', 'ADVENTURE', 'Scherlock Holmes', 29.99, '1891-10-12');
+ INSERT INTO fictionBooks (title, authorName, fictionGenre, mainCharacters, price, dateOfPublication) VALUES
+ ('Harry Potter and the Philosophers Stone2', 'J. K. Rowling.', 'ADVENTURE', 'Harry Potter', 9.99, '1997-06-26');
  
  SELECT * FROM fictionBooks;
  
@@ -49,9 +71,56 @@ CREATE TABLE fictionBooks (
  
  SELECT * FROM users;
  
+ INSERT INTO inventory (bookId, amountInStock, amountSold) VALUES
+ (1, 11, 1);
+  INSERT INTO inventory (bookId, amountInStock, amountSold) VALUES
+ (2, 9, 8);
+  INSERT INTO inventory (bookId, amountInStock, amountSold) VALUES
+ (3, 1, 4);
+  INSERT INTO inventory (bookId, amountInStock, amountSold) VALUES
+ (4, 20, 10);
+  INSERT INTO inventory (bookId, amountInStock, amountSold) VALUES
+ (5, 5, 1);
+  INSERT INTO inventory (bookId, amountInStock, amountSold) VALUES
+ (6, 4, 3);
+ 
+ SELECT * FROM inventory;
+ 
+ INSERT INTO SALES (amountSold, dateSold, userId) VALUES
+ (1, '2016-05-01', 1);
+  INSERT INTO SALES (amountSold, dateSold, userId) VALUES
+ (1, '2016-05-02', 1);
+  INSERT INTO SALES (amountSold, dateSold, userId) VALUES
+ (1, '2016-07-10', 1);
+  INSERT INTO SALES (amountSold, dateSold, userId) VALUES
+ (1, '2017-05-01', 1);
+  INSERT INTO SALES (amountSold, dateSold, userId) VALUES
+ (1, '2017-05-10', 1);
+  INSERT INTO SALES (amountSold, dateSold, userId) VALUES
+ (4, '2017-08-11', 1);
+ INSERT INTO SALES (amountSold, dateSold, userId) VALUES
+ (6, '2017-012-01', 1);
+  INSERT INTO SALES (amountSold, dateSold, userId) VALUES
+ (13, '2017-03-10', 1);
+  INSERT INTO SALES (amountSold, dateSold, userId) VALUES
+ (5, '2017-01-11', 1);
+ 
+ 
+ SELECT * FROM sales;
+ 
+ 
  DELETE FROM users
  WHERE userId = 3;
  
  UPDATE users
  SET isAdmin = 1
  WHERE userId = 1;
+ 
+ UPDATE fictionBooks  
+ SET amountSold = 1, amountInStock = 10
+ WHERE bookId = 1;
+ 
+ SELECT * FROM fictionBooks
+ LEFT JOIN inventory
+ ON fictionBooks.bookId = inventory.bookId;
+ 

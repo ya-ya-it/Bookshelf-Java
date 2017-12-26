@@ -82,8 +82,7 @@ public class AddNewBookViewController implements Initializable {
 
     /**
      * This method checks fields and throws errors if data are incorrect. If
-     * data are correct, it saves to the ObservableList and sends to the Main
-     * Table.
+     * data are correct, it saves to the database
      *
      * @param event
      * @throws IOException

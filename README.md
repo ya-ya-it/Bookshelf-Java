@@ -10,6 +10,6 @@ Marry Christmas and Happy New Year!
 //TODO
 - Fix RegisterNewUserController
 - Create SaleBookController
-- Create SalesReviewController
+- Insert inventory
 Everything else is done
 </p>

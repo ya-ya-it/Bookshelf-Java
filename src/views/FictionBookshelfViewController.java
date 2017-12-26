@@ -22,7 +22,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import jdk.nashorn.internal.objects.Global;
 import models.User;
 
 /**
@@ -202,7 +201,9 @@ public class FictionBookshelfViewController implements Initializable, Controller
             statement = conn.createStatement();
 
             //3.  create the SQL query
-            resultSet = statement.executeQuery("SELECT * FROM fictionBooks");
+            resultSet = statement.executeQuery("SELECT * FROM fictionBooks " +
+                                                " LEFT JOIN inventory " +
+                                                " ON fictionBooks.bookId = inventory.bookId;");
 
             //4.  create book objects from each record
             while (resultSet.next()) {

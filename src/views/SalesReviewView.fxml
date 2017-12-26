@@ -49,7 +49,7 @@
             <Label fx:id="booksInStockLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label text="Books sold" GridPane.rowIndex="3" />
             <Label fx:id="bookSoldLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <ComboBox fx:id="yearCombobox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <ComboBox fx:id="yearCombobox" onAction="#changeGraphOnAction" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label text="Year" GridPane.rowIndex="4" />
             <Button mnemonicParsing="false" onAction="#backButtonPushed" text="Back" GridPane.columnIndex="1" GridPane.rowIndex="5" />
          </children>

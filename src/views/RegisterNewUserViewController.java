@@ -49,6 +49,7 @@ public class RegisterNewUserViewController implements Initializable, ControllerC
     }
 
     public void saveUserButtonPushed(ActionEvent event) throws NoSuchAlgorithmException, SQLException, IOException {
+        
         if (validPassword() || user != null) {
             try {
                 if (user != null) {
