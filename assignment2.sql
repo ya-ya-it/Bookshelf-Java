@@ -45,7 +45,9 @@ CREATE TABLE fictionBooks (
     amountSold INT,
     dateSold DATE,
     userId int,
-    FOREIGN KEY (userId) REFERENCES users (userId)
+    bookId int,
+    FOREIGN KEY (userId) REFERENCES users (userId),
+    FOREIGN KEY (bookId) REFERENCES fictionBooks (bookId)
  );
  
  INSERT INTO fictionBooks (title, authorName, fictionGenre, mainCharacters, price, dateOfPublication) VALUES
@@ -84,43 +86,27 @@ CREATE TABLE fictionBooks (
   INSERT INTO inventory (bookId, amountInStock, amountSold) VALUES
  (6, 4, 3);
  
+  INSERT INTO inventory (bookId, amountInStock, amountSold) VALUES  ((SELECT MAX(bookId) FROM fictionBooks), 2, 1);
+ 
  SELECT * FROM inventory;
  
- INSERT INTO SALES (amountSold, dateSold, userId) VALUES
- (1, '2016-05-01', 1);
-  INSERT INTO SALES (amountSold, dateSold, userId) VALUES
- (1, '2016-05-02', 1);
-  INSERT INTO SALES (amountSold, dateSold, userId) VALUES
- (1, '2016-07-10', 1);
-  INSERT INTO SALES (amountSold, dateSold, userId) VALUES
- (1, '2017-05-01', 1);
-  INSERT INTO SALES (amountSold, dateSold, userId) VALUES
- (1, '2017-05-10', 1);
-  INSERT INTO SALES (amountSold, dateSold, userId) VALUES
- (4, '2017-08-11', 1);
- INSERT INTO SALES (amountSold, dateSold, userId) VALUES
- (6, '2017-012-01', 1);
-  INSERT INTO SALES (amountSold, dateSold, userId) VALUES
- (13, '2017-03-10', 1);
-  INSERT INTO SALES (amountSold, dateSold, userId) VALUES
- (5, '2017-01-11', 1);
- 
+ INSERT INTO SALES (amountSold, dateSold, userId, bookId) VALUES
+ (1, '2016-05-01', 1, 1);
+  INSERT INTO SALES (amountSold, dateSold, userId, bookId) VALUES
+ (1, '2016-05-02', 1, 2);
+  INSERT INTO SALES (amountSold, dateSold, userId, bookId) VALUES
+ (1, '2016-07-10', 1, 1);
+  INSERT INTO SALES (amountSold, dateSold, userId, bookId) VALUES
+ (1, '2017-05-01', 1, 4);
+  INSERT INTO SALES (amountSold, dateSold, userId, bookId) VALUES
+ (1, '2017-05-10', 1, 5);
+  INSERT INTO SALES (amountSold, dateSold, userId, bookId) VALUES
+ (4, '2017-08-11', 1, 1);
+ INSERT INTO SALES (amountSold, dateSold, userId, bookId) VALUES
+ (6, '2017-012-01', 1, 2);
+  INSERT INTO SALES (amountSold, dateSold, userId, bookId) VALUES
+ (13, '2017-03-10', 1, 6);
+  INSERT INTO SALES (amountSold, dateSold, userId, bookId) VALUES
+ (5, '2017-01-11', 1, 1);
  
  SELECT * FROM sales;
- 
- 
- DELETE FROM users
- WHERE userId = 3;
- 
- UPDATE users
- SET isAdmin = 1
- WHERE userId = 1;
- 
- UPDATE fictionBooks  
- SET amountSold = 1, amountInStock = 10
- WHERE bookId = 1;
- 
- SELECT * FROM fictionBooks
- LEFT JOIN inventory
- ON fictionBooks.bookId = inventory.bookId;
- 

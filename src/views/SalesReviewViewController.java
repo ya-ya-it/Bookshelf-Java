@@ -169,7 +169,11 @@ public class SalesReviewViewController implements Initializable {
         salesChart.getData().clear();
 
         try {
-            populateSeriesFromDB();
+            if (!SceneChanger.getLoggedInUser().isAdmin()) {
+                populateSeriesFromDB();
+            } else {
+                populateSeriesForAdminFromDB();
+            }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -189,8 +193,8 @@ public class SalesReviewViewController implements Initializable {
     }
 
     /**
-     * This method will populate the sales with the latest info from the
-     * database
+     * This method will populate the sales with the latest info for the 
+     * particular user from the database
      */
     public void populateSeriesFromDB() throws SQLException {
         Connection conn = null;
@@ -215,6 +219,55 @@ public class SalesReviewViewController implements Initializable {
             statement.setInt(1, SceneChanger.getLoggedInUser().getUserId());
 
             //5. execute the query
+            resultSet = statement.executeQuery();
+
+            //6. loop over the result set and build the series
+            while (resultSet.next()) {
+                if (resultSet.getInt(1) == LocalDate.now().getYear()) {
+                    currentSalesLoggedSeries.getData().add(new XYChart.Data(resultSet.getString(2), resultSet.getInt(3)));
+                } else if (resultSet.getInt(1) == LocalDate.now().getYear() - 1) {
+                    prevoiusSalesLoggedSeries.getData().add(new XYChart.Data(resultSet.getString(2), resultSet.getInt(3)));
+
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            if (resultSet != null) {
+                resultSet.close();
+            }
+        }
+    }
+    
+    /**
+     * This method will populate the sales with the latest info for admin from the
+     * database
+     */
+    public void populateSeriesForAdminFromDB() throws SQLException {
+        Connection conn = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            //1.  Connect to the database
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/fictionBookShelf?useSSL=false", "root", "root");
+
+            //2. create a String with the sql statement
+            String sql = "SELECT YEAR(dateSold), MONTHNAME(dateSold), SUM(amountSold) "
+                    + "FROM sales "
+                    + "GROUP BY YEAR(dateSold), MONTH(dateSold)"
+                    + "ORDER BY YEAR(dateSold), MONTH(dateSold);";
+
+            //3. create the statement
+            statement = conn.prepareCall(sql);
+
+            //4. execute the query
             resultSet = statement.executeQuery();
 
             //6. loop over the result set and build the series

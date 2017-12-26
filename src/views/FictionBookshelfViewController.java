@@ -95,7 +95,6 @@ public class FictionBookshelfViewController implements Initializable, Controller
         if (!SceneChanger.getLoggedInUser().isAdmin()) {
             allUsersButton.setVisible(false);
             addNewBookButton.setVisible(false);
-            salesReportButton.setVisible(false);
         }
 
     }
@@ -156,6 +155,7 @@ public class FictionBookshelfViewController implements Initializable, Controller
         SceneChanger sc = new SceneChanger();
         User user = SceneChanger.getLoggedInUser();
         RegisterNewUserViewController controller = new RegisterNewUserViewController();
+        
         sc.changeScenes(event, "RegisterNewUserView.fxml", "Edit User", user, controller);
     }
 

@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
@@ -91,11 +92,9 @@ public class SaleBooksViewController implements Initializable, ControllerClass {
                 if (book.getAmountInStock() > 1) {
                     sellBookFromDB();
                     errorMsgLabel.setText("You successfully sell the book");
-                    System.out.println(dateSoldDatePicker.getValue());
                 } else {
                     deleteBookFromDB();
                     errorMsgLabel.setText("You successfully sell the last book.");
-                     System.out.println(dateSoldDatePicker.getValue());
                 }
             }
 
@@ -108,10 +107,15 @@ public class SaleBooksViewController implements Initializable, ControllerClass {
      * This method removes selected item from database if the amount of books is
      * 1
      */
-    public void deleteBookFromDB() throws SQLException {
+    public void deleteBookFromDB() throws SQLException, IOException {
         Connection conn = null;
         PreparedStatement statement = null;
 
+        saveTransactionIntoDB();
+        
+        setInventoryToZero();
+        setSalesToZero();
+        
         try {
             //1.  Connect to the database
             conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/fictionBookShelf?useSSL=false", "root", "root");
@@ -129,8 +133,6 @@ public class SaleBooksViewController implements Initializable, ControllerClass {
             //5. execute the query
             statement.executeUpdate();
 
-            saveTransactionIntoDB();
-
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         } finally {
@@ -142,15 +144,17 @@ public class SaleBooksViewController implements Initializable, ControllerClass {
             }
         }
     }
-
+    
     /**
      * This method decreases the number of books sold if the amount of books is
      * more than 1
      */
-    public void sellBookFromDB() throws SQLException {
+    public void sellBookFromDB() throws SQLException, IOException {
         Connection conn = null;
         PreparedStatement statement = null;
 
+        saveTransactionIntoDB();
+        
         int amountInStockNew = amountInStock - amountSoldSpinner.getValue();
         int amountSoldNew = amountSold + amountSoldSpinner.getValue();
 
@@ -174,8 +178,6 @@ public class SaleBooksViewController implements Initializable, ControllerClass {
             //5. execute the query
             statement.executeUpdate();
 
-            saveTransactionIntoDB();
-
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         } finally {
@@ -188,6 +190,92 @@ public class SaleBooksViewController implements Initializable, ControllerClass {
         }
     }
 
+    /**
+     * This method sets inventory for the particular book to zero
+     * @param event
+     * @throws IOException 
+     */
+    public void setInventoryToZero() throws IOException, SQLException {
+        Connection conn = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            //1.  Connect to the database
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/fictionBookShelf?useSSL=false", "root", "root");
+
+            //2. create a String with the sql statement
+            String sql = "UPDATE inventory " +
+                        "SET bookId = null " +
+                        "WHERE bookId = ?;";
+
+            //3. create the statement
+            statement = conn.prepareCall(sql);
+
+            //4. bind the parameters
+            statement.setInt(1, book.getBookId());
+
+            //5. execute the query
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            if (resultSet != null) {
+                resultSet.close();
+            }
+        }
+    }
+    
+    /**
+     * This method sets sales for the particular book to zero
+     * @param event
+     * @throws IOException 
+     */
+    public void setSalesToZero() throws IOException, SQLException {
+        Connection conn = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            //1.  Connect to the database
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/fictionBookShelf?useSSL=false", "root", "root");
+
+            //2. create a String with the sql statement
+            String sql = "UPDATE sales " +
+                        "SET bookId = null " +
+                        "WHERE bookId = ?;";
+
+            //3. create the statement
+            statement = conn.prepareCall(sql);
+
+            //4. bind the parameters
+            statement.setInt(1, book.getBookId());
+
+            //5. execute the query
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            if (resultSet != null) {
+                resultSet.close();
+            }
+        }
+    }
+    
     /**
      * This method saves the transaction to the sales table in db
      * @throws SQLException 

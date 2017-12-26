@@ -6,6 +6,12 @@ import java.security.SecureRandom;
 
 public class PasswordGenerator {
 
+    /**
+     * This method generates the encrypted password using existing password and salt
+     * @param passwordToEncrypt
+     * @param salt
+     * @return 
+     */
     public static String getSHA512Password(String passwordToEncrypt, byte[] salt) {
         String generatedPassword = null;
 
@@ -28,6 +34,11 @@ public class PasswordGenerator {
         return generatedPassword;
     }
 
+    /**
+     * This method generates the salt for the password
+     * @return
+     * @throws NoSuchAlgorithmException 
+     */
     public static byte[] getSalt() throws NoSuchAlgorithmException {
         SecureRandom sr = SecureRandom.getInstanceStrong();
         byte[] salt = new byte[16];

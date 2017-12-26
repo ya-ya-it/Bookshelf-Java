@@ -41,7 +41,7 @@ public abstract class Book {
      * @param amountInStock
      * @param amountSold
      */
-    public Book(String title, String authorName, Genre genre, BigDecimal price, 
+    public Book(String title, String authorName, Genre genre, BigDecimal price,
             LocalDate dateOfPublication, int amountInStock, int amountSold) {
         setBookId(bookId);
         setTitle(title);
@@ -55,8 +55,8 @@ public abstract class Book {
         this.amountSold = amountSold;
 
     }
-    
-    public Book(String title, String authorName, Genre genre, BigDecimal price, LocalDate dateOfPublication, 
+
+    public Book(String title, String authorName, Genre genre, BigDecimal price, LocalDate dateOfPublication,
             int amountInStock, int amountSold, File cover) throws IOException {
         setBookId(bookId);
         setTitle(title);
@@ -172,8 +172,6 @@ public abstract class Book {
     public void setBookId(int bookId) {
         this.bookId = bookId;
     }
-    
-    
 
     /**
      * This method will store the book cover image to the local server server
@@ -193,6 +191,7 @@ public abstract class Book {
     }
 
     /**
+     * This method generates the unique file name for the immage
      *
      * @param name
      * @return
@@ -222,6 +221,8 @@ public abstract class Book {
     }
 
     /**
+     * This method checks the file directory to ensure that the file name is
+     * unique
      *
      * @param fileName
      * @return
@@ -240,6 +241,8 @@ public abstract class Book {
     }
 
     /**
+     * This method will validate if the integer given corresponds to a valid
+     * ASCII character that could be used in a file name
      *
      * @param asciiValue
      * @return

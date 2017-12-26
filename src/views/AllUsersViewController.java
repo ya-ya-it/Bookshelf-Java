@@ -111,9 +111,56 @@ public class AllUsersViewController implements Initializable {
             //1.  Connect to the database
             conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/fictionBookShelf?useSSL=false", "root", "root");
 
+            setSalesToZero();
             //2. create a String with the sql statement
             String sql = "DELETE FROM users " +
                          " WHERE userId = ?;";
+
+            //3. create the statement
+            statement = conn.prepareCall(sql);
+
+            //4. bind the parameters
+            statement.setInt(1, user.getUserId());
+
+            //5. execute the query
+            statement.executeUpdate();
+            
+            userdTableView.getItems().remove(user);
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            if (resultSet != null) {
+                resultSet.close();
+            }
+        }
+    }
+    
+    /**
+     * This method sets sales for the particular user to zero
+     * @param event
+     * @throws IOException 
+     */
+    public void setSalesToZero() throws IOException, SQLException {
+        Connection conn = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        User user = this.userdTableView.getSelectionModel().getSelectedItem();
+
+        try {
+            //1.  Connect to the database
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/fictionBookShelf?useSSL=false", "root", "root");
+
+            //2. create a String with the sql statement
+            String sql = "UPDATE sales " +
+                        "SET userId = null " +
+                        "WHERE userId = ?;";
 
             //3. create the statement
             statement = conn.prepareCall(sql);
