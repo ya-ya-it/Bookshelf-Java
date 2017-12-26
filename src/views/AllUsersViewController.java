@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,6 +36,7 @@ public class AllUsersViewController implements Initializable {
     @FXML private Label nameLabel;
 
     @FXML private Button editUserButton;
+    @FXML private Button deleteUserButton;
 
     /**
      * Initializes the controller class.
@@ -47,6 +49,7 @@ public class AllUsersViewController implements Initializable {
         phoneNumColumn.setCellValueFactory(new PropertyValueFactory<User, String>("phoneNum"));
 
         editUserButton.setDisable(true);
+        deleteUserButton.setDisable(true);
         nameLabel.setText(SceneChanger.getLoggedInUser().getUsername());
 
         try {
@@ -91,6 +94,51 @@ public class AllUsersViewController implements Initializable {
         RegisterNewUserViewController controller = new RegisterNewUserViewController();
 
         sc.changeScenes(event, "RegisterNewUserView.fxml", "Edit User", user, controller);
+    }
+    
+    /**
+     * This method deletes selected user
+     * @param event
+     * @throws IOException 
+     */
+    public void deleteUserButtonPushed(ActionEvent event) throws IOException, SQLException {
+        Connection conn = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        User user = this.userdTableView.getSelectionModel().getSelectedItem();
+
+        try {
+            //1.  Connect to the database
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/fictionBookShelf?useSSL=false", "root", "root");
+
+            //2. create a String with the sql statement
+            String sql = "DELETE FROM users " +
+                         " WHERE userId = ?;";
+
+            //3. create the statement
+            statement = conn.prepareCall(sql);
+
+            //4. bind the parameters
+            statement.setInt(1, user.getUserId());
+
+            //5. execute the query
+            statement.executeUpdate();
+            
+            userdTableView.getItems().remove(user);
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            if (resultSet != null) {
+                resultSet.close();
+            }
+        }
     }
 
     /**
@@ -150,5 +198,6 @@ public class AllUsersViewController implements Initializable {
      */
     public void userSelected() {
         editUserButton.setDisable(false);
+        deleteUserButton.setDisable(false);
     }
 }

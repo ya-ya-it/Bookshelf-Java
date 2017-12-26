@@ -29,6 +29,7 @@
          <children>
             <Button fx:id="addNewUserButton" mnemonicParsing="false" onAction="#addUserButtonPushed" prefHeight="27.0" prefWidth="107.0" text="Add New User" />
             <Button fx:id="editUserButton" mnemonicParsing="false" onAction="#editUserButtonPushed" prefWidth="107.0" text="Edit User" />
+            <Button fx:id="deleteUserButton" mnemonicParsing="false" onAction="#deleteUserButtonPushed" prefWidth="113.0" text="Delete User" />
             <Button mnemonicParsing="false" onAction="#backButtonPushed" prefHeight="27.0" prefWidth="107.0" text="Back" />
          </children>
          <padding>
