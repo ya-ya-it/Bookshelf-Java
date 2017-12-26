@@ -3,7 +3,12 @@ package views;
 import java.io.IOException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import models.FictionBook;
+import models.PasswordGenerator;
 import models.User;
 
 /**
@@ -34,6 +40,7 @@ public class RegisterNewUserViewController implements Initializable, ControllerC
     @FXML private Label adminLabel;
 
     private User user;
+    private int userId;
 
     /**
      * Initializes the controller class.
@@ -48,73 +55,80 @@ public class RegisterNewUserViewController implements Initializable, ControllerC
         errorMsg.setText("");
     }
 
-    public void saveUserButtonPushed(ActionEvent event) throws NoSuchAlgorithmException, SQLException, IOException {
+    public void saveUserButtonPushed(ActionEvent event) throws SQLException, IOException, NoSuchAlgorithmException {
         
-        if (validPassword() || user != null) {
-            try {
-                if (user != null) {
-                    //update the user information
-                    updateUser();
-                    user.updateUserInDB();
-
-                    //update the password if it changed
-                    if (!passwordField.getText().isEmpty()) {
-                        if (validPassword()) {
-                            user.changePassword(passwordField.getText());
-                        }
+        Connection conn = null;
+        PreparedStatement preparedStatement = null;
+ 
+ 
+        try {
+            //1. Connect to the database
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/fictionBookshelf?useSSL=false", "root", "root");
+ 
+            byte[] salt = PasswordGenerator.getSalt();
+ 
+            //2. Create a String that holds the query with ? as user inputs
+            if (user == null) {
+                if (passwordField.getText().length() > 5) {
+                    if (passwordField.getText().equals(confirmPasswordField.getText())) {
+                        preparedStatement = conn.prepareStatement("INSERT INTO users (username, phoneNum, password, salt, isAdmin) VALUES (?,?,?,?,?)");
+                        preparedStatement.setString(1, usernameTextField.getText());
+                        preparedStatement.setString(2, phoneNumTextField.getText());
+                        preparedStatement.setString(3, PasswordGenerator.getSHA512Password(passwordField.getText(), salt));
+                        preparedStatement.setBlob(4, new javax.sql.rowset.serial.SerialBlob(salt));
+                        preparedStatement.setBoolean(5, isAdminCheckBox.isSelected());
+                 } else {
+                        System.out.println("Passwords do not match");
                     }
-                } else //create new user
-                {
-                    user = new User(usernameTextField.getText(), phoneNumTextField.getText(),
-                            passwordField.getText(),
-                            isAdminCheckBox.isSelected());
-                }
-                errorMsg.setText("");
-                user.insertIntoDB();
-
-                SaleBooksViewController controllerClass = new SaleBooksViewController();
-                SceneChanger sc = new SceneChanger();
-                SceneChanger.setLoggedInUser(user);
-                
-                if (user != null && !SceneChanger.getLoggedInUser().isAdmin()) {
-                    sc.changeScenes(event, "FictionBookshelfView.fxml", "Bookshelf", user, controllerClass);
                 } else {
-                    sc.changeScenes(event, "AllUsersView.fxml", "Users", user, controllerClass);
+                    System.out.println("Password is too short");
+                }     
+            } else if (user != null && !passwordField.getText().isEmpty() && !confirmPasswordField.getText().isEmpty()) {
+                if (passwordField.getText().length() > 5) {
+                    if (passwordField.getText().equals(confirmPasswordField.getText())) {
+                        preparedStatement = conn.prepareStatement("UPDATE users SET username = ?, phoneNum = ?, password = ?, salt = ?, isAdmin = ? WHERE userId = " + user.getUserId());
+                        preparedStatement.setString(1, usernameTextField.getText());
+                        preparedStatement.setString(2, phoneNumTextField.getText());
+                        preparedStatement.setString(3, PasswordGenerator.getSHA512Password(passwordField.getText(), salt));
+                        preparedStatement.setBlob(4, new javax.sql.rowset.serial.SerialBlob(salt));
+                        preparedStatement.setBoolean(5, isAdminCheckBox.isSelected());
+                 } else {
+                        System.out.println("Passwords do not match");
+                    }
+                } else {
+                    System.out.println("Password is too short");
                 }
-            } catch (Exception e) {
-                errorMsg.setText(e.getMessage());
-                System.out.println(errorMsg);
+            } else if (user != null) {
+                preparedStatement = conn.prepareStatement("UPDATE users SET username = ?, phoneNum = ?, isAdmin = ? WHERE userId = " + user.getUserId());
+                preparedStatement.setString(1, usernameTextField.getText());
+                preparedStatement.setString(2, phoneNumTextField.getText());
+                preparedStatement.setBoolean(3, isAdminCheckBox.isSelected());
             }
-
+            
+            preparedStatement.executeUpdate();
+            System.out.println("User Saved!");
+            
+            SceneChanger sc = new SceneChanger();
+            
+            if(user == null) {
+                errorMsg.setText("Thanks for registration! Now please go back "
+                        + "and log in using your userId and password. Your userId is " 
+                + getUserId());
+                System.out.println(getUserId());
+            } else if (user != null && !SceneChanger.getLoggedInUser().isAdmin()) {
+                sc.changeScenes(event, "FictionBookshelfView.fxml", "Bookshelf");
+            } else {
+                sc.changeScenes(event, "AllUsersView.fxml", "Users");
+            }
+            
+        } catch (SQLException e) {
+            System.err.println(e);
+        } finally {
+            if (conn != null)
+                conn.close();
+            if (preparedStatement != null)
+                preparedStatement.close();
         }
-    }
-
-    /**
-     * This method will validate that the password match confirm password
-     *
-     */
-    public boolean validPassword() {
-        if (passwordField.getText().length() < 5) {
-            errorMsg.setText("Passwords must be greater than 5 characters in length");
-            return false;
-        }
-
-        if (passwordField.getText().equals(confirmPasswordField.getText())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * This method will read from the GUI fields and update the user object
-     */
-    public void updateUser() throws IOException {
-        user.setUsername(usernameTextField.getText());
-        user.setPhoneNum(phoneNumTextField.getText());
-        user.setPassword(passwordField.getText());
-        user.setAdmin(isAdminCheckBox.isSelected());
-
     }
 
     /**
@@ -133,6 +147,41 @@ public class RegisterNewUserViewController implements Initializable, ControllerC
             sc.changeScenes(event, "LoginView.fxml", "Log in");
         }
     }
+    
+    public int getUserId() throws SQLException{
+        Connection conn = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            //1. connect to the database
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/fictionBookShelf?useSSL=false", "root", "root");
+            
+            //2.  create a statement object
+            statement = conn.createStatement();
+
+            //3.  create the SQL query
+            resultSet = statement.executeQuery("SELECT * FROM users ORDER BY userId DESC LIMIT 1;");
+
+            //4.  create book objects from each record
+            while (resultSet.next()) {
+                userId = resultSet.getInt("userId");
+            }
+        } catch (Exception e) {
+            System.err.println(e);
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            if (resultSet != null) {
+                resultSet.close();
+            }
+        }
+        return userId;
+    }
 
     @Override
     public void preloadData(User user) {
@@ -144,6 +193,7 @@ public class RegisterNewUserViewController implements Initializable, ControllerC
             isAdminCheckBox.setSelected(true);
             adminLabel.setVisible(true);
         }
+        
     }
 
     @Override

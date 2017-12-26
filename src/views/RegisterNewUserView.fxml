@@ -39,6 +39,6 @@
       </GridPane>
       <Button layoutX="576.0" layoutY="494.0" mnemonicParsing="false" onAction="#saveUserButtonPushed" prefHeight="27.0" prefWidth="79.0" text="Save" />
       <Button layoutX="451.0" layoutY="494.0" mnemonicParsing="false" onAction="#backButtonPushed" prefHeight="27.0" prefWidth="79.0" text="Back" />
-      <Label fx:id="errorMsg" layoutX="417.0" layoutY="429.0" text="Label" />
+      <Label fx:id="errorMsg" layoutX="14.0" layoutY="429.0" text="Label" />
    </children>
 </AnchorPane>
